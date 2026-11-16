@@ -1,0 +1,24 @@
+{
+  "name": "hill-serpent",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Original bounded-search Battlesnake for Duels, Standard, Royale and Constrictor",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node src/server.mjs",
+    "test": "node --test test/*.test.mjs",
+    "bench": "node tools/bench.mjs",
+    "arena": "node tools/arena.mjs",
+    "tune": "node tools/tune.mjs",
+    "bundle": "node tools/bundle.mjs",
+    "deploy": "wrangler deploy",
+    "dev:edge": "wrangler dev"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "wrangler": "4.163.0"
+  }
+}
