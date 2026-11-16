@@ -4,6 +4,11 @@
 написаны в рамках задания; код чужих соревновательных змеек не использовался.
 Внешние LLM, платные API, обучение модели и GPU во время игры не нужны.
 
+**Опубликована:** [hill-serpent.pages.dev](https://hill-serpent.pages.dev).
+[Профиль на арене](https://arena.battlesnake.com/battlesnakes/353a87c8-5303-4ead-aa45-38b72b2ba12e/profile).
+Подключены Duels, Standard, Royale и Constrictor. Реальные ссылки и проверка
+публикации: [`docs/publication.md`](docs/publication.md).
+
 ## Быстрый локальный запуск
 
 Нужен Node.js 22+ (рекомендуется 24 LTS). Для локального сервера **не требуется
@@ -110,13 +115,27 @@ node tools/official-check.mjs --engine /absolute/path/battlesnake --games 4 --mo
 
 Полная инструкция: [`docs/deploy.md`](docs/deploy.md).
 
-Для бесплатного Cloudflare Workers подготовлен `wrangler.toml` с бюджетом
+Текущий хостинг — Cloudflare Pages Functions в advanced mode. Ветка `main`
+репозитория [malenferio-ux/hill-serpent](https://github.com/malenferio-ux/hill-serpent)
+автоматически собирается командой `npm test && npm run bundle`, выходная
+папка — `dist/pages`. Для публикации через CLI после входа:
+
+```sh
+npm ci
+npm run bundle
+npm run deploy:pages
+```
+
+Конфигурация этого варианта — `wrangler.toml`. Ниже оставлена
+альтернатива для отдельного Workers-проекта на `workers.dev`.
+
+Для бесплатного Cloudflare Workers подготовлен `wrangler.worker.toml` с бюджетом
 256 узлов. Нужен ваш аккаунт Cloudflare. После входа:
 
 ```sh
 npm ci
 npx wrangler login
-npm run deploy
+npm run deploy:worker
 ```
 
 Команда покажет действительный HTTPS URL вида
@@ -133,9 +152,9 @@ Cloudflare Dashboard. Пересборка без зависимостей: `npm
 рейтинга добавьте также Standard, Royale и Constrictor. Подробности и
 критерий сдачи: [`docs/submission.md`](docs/submission.md).
 
-**Статус:** локальный код готов и проверен. Публичный GitHub-репозиторий,
-постоянный endpoint и регистрация на арене требуют входа владельца аккаунтов.
-Победы над эталонами курса и место в рейтинге пока не подтверждены.
+**Статус:** публичный код, HTTPS endpoint и участие в четырёх лидербордах
+настроены. Результаты отдельных матчей и итоговые баллы оцениваются отдельно;
+позиция выше эталонов к дедлайну пока не подтверждена.
 
 ## Источники правил
 

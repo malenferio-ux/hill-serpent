@@ -14,8 +14,10 @@
     "arena": "node tools/arena.mjs",
     "tune": "node tools/tune.mjs",
     "bundle": "node tools/bundle.mjs",
-    "deploy": "wrangler deploy",
-    "dev:edge": "wrangler dev"
+    "deploy": "wrangler pages deploy dist/pages --project-name=hill-serpent",
+    "deploy:pages": "npm run deploy",
+    "deploy:worker": "wrangler deploy --config wrangler.worker.toml",
+    "dev:edge": "wrangler pages dev dist/pages"
   },
   "license": "MIT",
   "devDependencies": {
