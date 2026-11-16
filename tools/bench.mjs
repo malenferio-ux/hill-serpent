@@ -7,6 +7,7 @@ import { start, environment, random, argumentsOf } from './local-game.mjs';
 
 const args = argumentsOf(process.argv.slice(2));
 const iterations = Number(args.iterations ?? 120);
+const samplingStride = Math.max(1, Number(args.stride ?? 1) | 0);
 const samples = [];
 for (const mode of ['duel', 'standard', 'royale', 'constrictor']) {
   let state = start(42, mode); const rng = random(4321), box = [0, 10, 0, 10];
@@ -30,7 +31,7 @@ for (const nodes of [128, 256, 512, 1024, 3200]) {
   const times = [], cpu = process.cpuUsage();
   for (let i = 0; i < iterations; i++) {
     const before = performance.now();
-    chooseMove(samples[i % samples.length].request, { nodes });
+    chooseMove(samples[(i * samplingStride) % samples.length].request, { nodes });
     times.push(performance.now() - before);
   }
   const used = process.cpuUsage(cpu);
@@ -42,7 +43,7 @@ for (const nodes of [128, 256, 512, 1024, 3200]) {
 }
 const result = { machine: { platform: process.platform, arch: process.arch, cpu: os.cpus()[0]?.model, node: process.version },
   singleDecisionThread: true, v8Flags: process.execArgv,
-  positions: samples.length, note: 'Local timing is not a production Cloudflare CPU measurement or network latency guarantee.', rows };
+  positions: samples.length, samplingStride, note: 'Local timing is not a production Cloudflare CPU measurement or network latency guarantee.', rows };
 await mkdir('results', { recursive: true });
 await writeFile('results/latency.json', JSON.stringify(result, null, 2));
 console.log(JSON.stringify(result, null, 2));
