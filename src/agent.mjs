@@ -3,12 +3,12 @@ import { DIRECTIONS, fromRequest, occupancy, legalMoves, step } from './game.mjs
 export const DEFAULT_WEIGHTS = Object.freeze({
   territory: 1.8, length: 32, food: 6, health: 0.16,
   space: 1.2, trap: 450, mobility: 8, center: 0.35,
-  staticSafety: 0.5, territoryCap: 0, foodPotential: 0, tailRisk: 0, staticSpace: 0, staticTailSteps: 2, foodProgress: 0, leadTarget: 999, leadSlope: 1,
+  staticSafety: 0.5, territoryCap: 0, foodPotential: 0, tailRisk: 0, staticSpace: 0, staticTailSteps: 2, foodProgress: 0, foodRace: 0, leadTarget: 999, leadSlope: 1,
 });
 // Keep the four-player policy while improving food progress in duels.
 export const DUEL_WEIGHTS = Object.freeze({
   ...DEFAULT_WEIGHTS, length: 48, territoryCap: 0.4, foodPotential: 1, tailRisk: 1,
-  staticSpace: 0, staticTailSteps: 2, foodProgress: 2, leadTarget: 6, leadSlope: 0.2,
+  staticSpace: 0, staticTailSteps: 2, foodProgress: 2, foodRace: 1, leadTarget: 6, leadSlope: 0.2,
 });
 const WIN = 1_000_000, LOSS = -1_000_000, DRAW = -10_000;
 const STOP = Symbol('search budget exhausted');
@@ -25,6 +25,7 @@ export class Evaluator {
     this.areas = new Float64Array(count);
     this.spaces = new Float64Array(count);
     this.foodDistances = new Int16Array(count);
+    this.raceFoodDistances = new Int16Array(count);
     this.staticSpaces = new Float64Array(count);
     this.tailConnected = new Uint8Array(count);
     this.seen = new Int16Array(g.size);
@@ -56,6 +57,7 @@ export class Evaluator {
     const { release, queue, distances, areas, spaces, foodDistances } = this;
     release.fill(0);
     areas.fill(0); spaces.fill(0); foodDistances.fill(999);
+    this.raceFoodDistances.fill(999);
     this.staticSpaces.fill(0); this.tailConnected.fill(0);
     for (const s of snakes) {
       if (!s.alive) continue;
@@ -123,7 +125,15 @@ export class Evaluator {
           owner = i; distance = d; length = len;
         } else if (d === distance && len === length) owner = -1;
       }
-      if (owner >= 0 && distance < 999) areas[owner] += state.hazards[p] ? 0.2 : 1;
+      if (owner >= 0 && distance < 999) {
+        areas[owner] += state.hazards[p] ? 0.2 : 1;
+        if (state.food[p]) this.raceFoodDistances[owner] = Math.min(this.raceFoodDistances[owner], distance);
+      }
+    }
+    if (this.duel && this.weights.foodRace > 0 && !state.constrictor) {
+      for (let i = 0; i < snakes.length; i++) {
+        if (this.raceFoodDistances[i] < 999) foodDistances[i] = this.raceFoodDistances[i];
+      }
     }
   }
 
@@ -315,8 +325,15 @@ export function decide(state, options = {}) {
   // toward an existing meal. Measure against the SAME food set after eating.
   // Terminal outcomes and proven traps still dominate this bounded preference.
   if (state.snakes.length === 2 && !state.constrictor && evaluator.weights.foodProgress > 0) {
-    const foods = [];
+    let foods = [];
     for (let q = 0; q < state.g.size; q++) if (state.food[q]) foods.push(q);
+    if (evaluator.weights.foodRace > 0) {
+      evaluator.analyze(state);
+      const mineDistance = evaluator.distances[0], enemyDistance = evaluator.distances[1];
+      const available = foods.filter(q => mineDistance[q] < 999 && (mineDistance[q] < enemyDistance[q]
+        || (mineDistance[q] === enemyDistance[q] && state.snakes[0].body.length > state.snakes[1].body.length)));
+      if (available.length) foods = available;
+    }
     const distance = p => Math.min(...foods.map(q => {
       let dx = Math.abs(p % state.g.width - q % state.g.width), dy = Math.abs((p / state.g.width | 0) - (q / state.g.width | 0));
       if (state.g.wrapped) { dx = Math.min(dx, state.g.width - dx); dy = Math.min(dy, state.g.height - dy); }
