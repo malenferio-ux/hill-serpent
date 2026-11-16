@@ -51,3 +51,20 @@ test('real rematch regression: leaves the central loop toward food', async () =>
     assert.ok(distance({ x: next % 11, y: Math.floor(next / 11) }) < distance(request.you.head));
   }
 });
+
+
+test('Apprentice regression: avoids the four-step wall corridor', async () => {
+  const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-corridor.json', import.meta.url)));
+  for (const nodes of [256, 3200]) {
+    const result = chooseMove(request, { nodes });
+    if (nodes === 256) assert.equal(result.move, 'down');
+    assert.equal(result.survival.up.trapped, true);
+    assert.ok(result.survival.up.deepest <= 4);
+    assert.ok(Object.values(result.survival).every(p => p.nodes <= 128));
+  }
+});
+
+test('Apprentice regression: a reachable tail does not make a cramped pocket safe', async () => {
+  const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-pocket.json', import.meta.url)));
+  for (const nodes of [256, 3200]) assert.equal(chooseMove(request, { nodes }).move, 'up');
+});
