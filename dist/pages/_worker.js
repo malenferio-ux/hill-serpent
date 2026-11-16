@@ -174,7 +174,7 @@ const DEFAULT_WEIGHTS = Object.freeze({
 // Keep the four-player policy while improving food progress in duels.
 const DUEL_WEIGHTS = Object.freeze({
   ...DEFAULT_WEIGHTS, length: 48, territoryCap: 0.4, foodPotential: 1, tailRisk: 1,
-  staticSpace: 0, staticTailSteps: 2, foodProgress: 2, foodRace: 1, leadTarget: 6, leadSlope: 0.2,
+  staticSpace: 0, staticTailSteps: 2, foodProgress: 8, foodRace: 1, leadTarget: 6, leadSlope: 0.2,
 });
 const WIN = 1_000_000, LOSS = -1_000_000, DRAW = -10_000;
 const STOP = Symbol('search budget exhausted');
@@ -630,7 +630,7 @@ function decide(state, options = {}) {
 
 // worker.mjs
 
-const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.7.0' };
+const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.7.1' };
 
 async function handle(request, env = {}) {
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
