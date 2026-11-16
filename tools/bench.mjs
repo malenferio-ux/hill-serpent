@@ -20,7 +20,7 @@ if (args.corpus) {
   const corpus = JSON.parse(await readFile(args.corpus, 'utf8'));
   for (const request of corpus) samples.push({ mode: request.game.ruleset.name, request });
 }
-for (const nodes of [128, 256, 3200]) {
+for (const nodes of [128, 256, 512, 1024, 3200]) {
   // Cold measurements precede a short warmup. All decisions run serially.
   const cold = performance.now(); chooseMove(samples[0].request, { nodes });
   const coldMs = performance.now() - cold;

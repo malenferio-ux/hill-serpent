@@ -7,8 +7,8 @@ import {step,DIRECTIONS} from '../src/game.mjs';
 const args=argumentsOf(process.argv.slice(2));
 if(!args['baseline-dir'])throw new Error('Pass --baseline-dir /path/to/previous-release-checkout');
 const {decide:legacy}=await import(pathToFileURL(resolve(args['baseline-dir'],'src/agent.mjs')));
-async function series({games=16,seed=4100000,weights={},mode='duel',opponent='legacy',nodes=256,challengerFn=challenger,opponentFn=legacy}){
- const out={games,seed,weights,mode,opponent,nodes,wins:0,losses:0,draws:0,turns:0,calls:0,totalMs:0,maxMs:0,loopTurns:0,opponentLoopTurns:0,firstFoodTurns:0,opponentFirstFoodTurns:0,finalLength:0};
+async function series({games=16,seed=4100000,weights={},mode='duel',opponent='legacy',nodes=256,opponentNodes=nodes,challengerFn=challenger,opponentFn=legacy}){
+ const out={games,seed,weights,mode,opponent,nodes,baselineNodes:opponentNodes,wins:0,losses:0,draws:0,turns:0,calls:0,totalMs:0,maxMs:0,loopTurns:0,opponentLoopTurns:0,firstFoodTurns:0,opponentFirstFoodTurns:0,finalLength:0};
  for(let i=0;i<games;i++){
   const gameSeed=seed+(i/2|0);let s=start(gameSeed,mode);if(i%2)[s.snakes[0].body,s.snakes[1].body]=[s.snakes[1].body,s.snakes[0].body];
   const rng=random(gameSeed^0xA5A5A5A5),box=[0,10,0,10],history=[],enemyHistory=[];let firstFood=-1,enemyFirstFood=-1;
@@ -24,7 +24,7 @@ async function series({games=16,seed=4100000,weights={},mode='duel',opponent='le
     if(!s.snakes[j].alive){moves.push(0);continue;}
     const view=perspective(s,j);let m;
     if(j===0){const begin=performance.now();m=DIRECTIONS.indexOf(challengerFn(view,{nodes,weights}).move);const ms=performance.now()-begin;out.calls++;out.totalMs+=ms;out.maxMs=Math.max(out.maxMs,ms);}
-    else if(opponent==='legacy')m=DIRECTIONS.indexOf(opponentFn(view,{nodes}).move);
+    else if(opponent==='legacy')m=DIRECTIONS.indexOf(opponentFn(view,{nodes:opponentNodes}).move);
     else m=baseline(view,opponent,rng);
     moves.push(m);
    }
@@ -35,8 +35,8 @@ async function series({games=16,seed=4100000,weights={},mode='duel',opponent='le
  }
  out.score=(out.wins+.5*out.draws)/games;out.meanMs=out.totalMs/out.calls;out.loopRate=out.loopTurns/out.turns;out.meanFirstFood=out.firstFoodTurns/games;out.meanFinalLength=out.finalLength/games;out.opponentLoopRate=out.opponentLoopTurns/out.turns;out.opponentMeanFirstFood=out.opponentFirstFoodTurns/games;delete out.totalMs;return out;
 }
-const result=await series({games:Number(args.games??64),seed:Number(args.seed??9100000),nodes:Number(args.nodes??256),mode:args.mode??'duel',opponent:args.opponent??'legacy'});
-result.note='Local comparison with supplied baseline, equal node budgets, paired swapped starts. Loop = same head cell within 4–12 turns without growth.';
+const result=await series({games:Number(args.games??64),seed:Number(args.seed??15100000),nodes:Number(args.nodes??256),opponentNodes:Number(args['baseline-nodes']??args.nodes??256),mode:args.mode??'duel',opponent:args.opponent??'legacy'});
+result.note='Local comparison with supplied baseline, reported main-search node limits and paired swapped starts; the current agent may also use bounded survival and opponent-reply probes. Loop = same head cell within 4–12 turns without growth.';
 await mkdir('results',{recursive:true});
 await writeFile('results/release-comparison.json',JSON.stringify(result,null,2));
 console.log(JSON.stringify(result,null,2));
