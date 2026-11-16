@@ -187,7 +187,7 @@ export class Evaluator {
   }
 }
 
-function orderMoves(state, index, occupied, preferred = -1) {
+function orderMoves(state, index, occupied, preferred = -1, foodCells = null) {
   const snake = state.snakes[index];
   if (!snake.alive) return [0];
   const moves = legalMoves(state, index, occupied);
@@ -198,7 +198,7 @@ function orderMoves(state, index, occupied, preferred = -1) {
     if (state.food[p]) value += 30;
     value -= state.hazards[p] * 12;
     let distance = 100;
-    for (let q = 0; q < state.g.size; q++) if (state.food[q]) {
+    for (const q of foodCells ?? []) {
       distance = Math.min(distance, Math.abs(p % state.g.width - q % state.g.width)
         + Math.abs(((p / state.g.width) | 0) - ((q / state.g.width) | 0)));
     }
@@ -234,7 +234,9 @@ function probeSurvival(state, firstMove, horizon = 12, limit = 128) {
     const head = g.next[body[0] * 4 + move];
     if (head < 0 || release[head] > turn) return false;
     for (let k = 0; k < body.length - 1; k++) if (body[k] === head) return false;
-    const next = [head, ...body.slice(0, -1)], ate = food[head];
+    const next = new Array(body.length), ate = food[head];
+    next[0] = head;
+    for (let k = 1; k < next.length; k++) next[k] = body[k - 1];
     if (ate) { next.push(next.at(-1)); food[head] = 0; }
     deepest = Math.max(deepest, turn);
     let survives = turn >= horizon;
@@ -257,11 +259,12 @@ function probeReplies(state, firstMove, horizon = 20, limit = 256) {
   function losing(s, remaining, forced = -1, lastMove = firstMove) {
     if (!s.snakes[0].alive) return s.snakes[1].alive;
     if (!s.snakes[1].alive || !remaining) return false;
-    const own = forced >= 0 ? [forced] : legalMoves(s, 0);
+    const occupied = occupancy(s);
+    const own = forced >= 0 ? [forced] : legalMoves(s, 0, occupied);
     own.sort((a, b) => (b === lastMove) - (a === lastMove));
     for (const m of own) {
       const target = s.g.next[s.snakes[0].body[0] * 4 + m];
-      const replies = legalMoves(s, 1);
+      const replies = legalMoves(s, 1, occupied);
       const distance = o => {
         const p = s.g.next[s.snakes[1].body[0] * 4 + o];
         if (p < 0 || target < 0) return 999;
@@ -386,8 +389,10 @@ export function decide(state, options = {}) {
       key = Math.imul(key ^ 65535, 16777619);
     }
     const previous = variations.get(key);
+    const foodCells = [];
+    for (let q = 0; q < s.g.size; q++) if (s.food[q]) foodCells.push(q);
     const choices = s.snakes.map((snake, i) => orderMoves(s, i, occupied,
-      i === 0 ? (preferred >= 0 ? preferred : previous?.move ?? -1) : -1));
+      i === 0 ? (preferred >= 0 ? preferred : previous?.move ?? -1) : -1, foodCells));
     const replyMoves = new Int8Array(4).fill(-1);
     if (ply === 0) choices[0] = choices[0].filter(move => allowedRoot.includes(move));
     const joint = new Array(s.snakes.length).fill(0);

@@ -99,7 +99,9 @@ export function step(state, moves) {
   const snakes = state.snakes.map((snake, i) => {
     if (!snake.alive) return snake;
     const head = g.next[snake.body[0] * 4 + moves[i]];
-    const body = [head, ...snake.body.slice(0, -1)];
+    const body = new Array(snake.body.length);
+    body[0] = head;
+    for (let k = 1; k < body.length; k++) body[k] = snake.body[k - 1];
     let health = snake.health - 1;
     if (head >= 0 && food[head]) {
       health = 100;
