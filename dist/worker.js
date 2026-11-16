@@ -100,7 +100,9 @@ function step(state, moves) {
   const snakes = state.snakes.map((snake, i) => {
     if (!snake.alive) return snake;
     const head = g.next[snake.body[0] * 4 + moves[i]];
-    const body = [head, ...snake.body.slice(0, -1)];
+    const body = new Array(snake.body.length);
+    body[0] = head;
+    for (let k = 1; k < body.length; k++) body[k] = snake.body[k - 1];
     let health = snake.health - 1;
     if (head >= 0 && food[head]) {
       health = 100;
@@ -167,12 +169,12 @@ function toRequest(state, index = 0) {
 const DEFAULT_WEIGHTS = Object.freeze({
   territory: 1.8, length: 32, food: 6, health: 0.16,
   space: 1.2, trap: 450, mobility: 8, center: 0.35,
-  staticSafety: 0.5, territoryCap: 0, foodPotential: 0, tailRisk: 0, staticSpace: 0, staticTailSteps: 2, foodProgress: 0, leadTarget: 999, leadSlope: 1,
+  staticSafety: 0.5, territoryCap: 0, foodPotential: 0, tailRisk: 0, staticSpace: 0, staticTailSteps: 2, foodProgress: 0, foodRace: 0, leadTarget: 999, leadSlope: 1,
 });
 // Keep the four-player policy while improving food progress in duels.
 const DUEL_WEIGHTS = Object.freeze({
   ...DEFAULT_WEIGHTS, length: 48, territoryCap: 0.4, foodPotential: 1, tailRisk: 1,
-  staticSpace: 0, staticTailSteps: 2, foodProgress: 2, leadTarget: 6, leadSlope: 0.2,
+  staticSpace: 0, staticTailSteps: 2, foodProgress: 2, foodRace: 1, leadTarget: 6, leadSlope: 0.2,
 });
 const WIN = 1_000_000, LOSS = -1_000_000, DRAW = -10_000;
 const STOP = Symbol('search budget exhausted');
@@ -189,6 +191,7 @@ class Evaluator {
     this.areas = new Float64Array(count);
     this.spaces = new Float64Array(count);
     this.foodDistances = new Int16Array(count);
+    this.raceFoodDistances = new Int16Array(count);
     this.staticSpaces = new Float64Array(count);
     this.tailConnected = new Uint8Array(count);
     this.seen = new Int16Array(g.size);
@@ -220,6 +223,7 @@ class Evaluator {
     const { release, queue, distances, areas, spaces, foodDistances } = this;
     release.fill(0);
     areas.fill(0); spaces.fill(0); foodDistances.fill(999);
+    this.raceFoodDistances.fill(999);
     this.staticSpaces.fill(0); this.tailConnected.fill(0);
     for (const s of snakes) {
       if (!s.alive) continue;
@@ -287,7 +291,15 @@ class Evaluator {
           owner = i; distance = d; length = len;
         } else if (d === distance && len === length) owner = -1;
       }
-      if (owner >= 0 && distance < 999) areas[owner] += state.hazards[p] ? 0.2 : 1;
+      if (owner >= 0 && distance < 999) {
+        areas[owner] += state.hazards[p] ? 0.2 : 1;
+        if (state.food[p]) this.raceFoodDistances[owner] = Math.min(this.raceFoodDistances[owner], distance);
+      }
+    }
+    if (this.duel && this.weights.foodRace > 0 && !state.constrictor) {
+      for (let i = 0; i < snakes.length; i++) {
+        if (this.raceFoodDistances[i] < 999) foodDistances[i] = this.raceFoodDistances[i];
+      }
     }
   }
 
@@ -351,7 +363,7 @@ class Evaluator {
   }
 }
 
-function orderMoves(state, index, occupied, preferred = -1) {
+function orderMoves(state, index, occupied, preferred = -1, foodCells = null) {
   const snake = state.snakes[index];
   if (!snake.alive) return [0];
   const moves = legalMoves(state, index, occupied);
@@ -362,7 +374,7 @@ function orderMoves(state, index, occupied, preferred = -1) {
     if (state.food[p]) value += 30;
     value -= state.hazards[p] * 12;
     let distance = 100;
-    for (let q = 0; q < state.g.size; q++) if (state.food[q]) {
+    for (const q of foodCells ?? []) {
       distance = Math.min(distance, Math.abs(p % state.g.width - q % state.g.width)
         + Math.abs(((p / state.g.width) | 0) - ((q / state.g.width) | 0)));
     }
@@ -398,7 +410,9 @@ function probeSurvival(state, firstMove, horizon = 12, limit = 128) {
     const head = g.next[body[0] * 4 + move];
     if (head < 0 || release[head] > turn) return false;
     for (let k = 0; k < body.length - 1; k++) if (body[k] === head) return false;
-    const next = [head, ...body.slice(0, -1)], ate = food[head];
+    const next = new Array(body.length), ate = food[head];
+    next[0] = head;
+    for (let k = 1; k < next.length; k++) next[k] = body[k - 1];
     if (ate) { next.push(next.at(-1)); food[head] = 0; }
     deepest = Math.max(deepest, turn);
     let survives = turn >= horizon;
@@ -421,11 +435,12 @@ function probeReplies(state, firstMove, horizon = 20, limit = 256) {
   function losing(s, remaining, forced = -1, lastMove = firstMove) {
     if (!s.snakes[0].alive) return s.snakes[1].alive;
     if (!s.snakes[1].alive || !remaining) return false;
-    const own = forced >= 0 ? [forced] : legalMoves(s, 0);
+    const occupied = occupancy(s);
+    const own = forced >= 0 ? [forced] : legalMoves(s, 0, occupied);
     own.sort((a, b) => (b === lastMove) - (a === lastMove));
     for (const m of own) {
       const target = s.g.next[s.snakes[0].body[0] * 4 + m];
-      const replies = legalMoves(s, 1);
+      const replies = legalMoves(s, 1, occupied);
       const distance = o => {
         const p = s.g.next[s.snakes[1].body[0] * 4 + o];
         if (p < 0 || target < 0) return 999;
@@ -476,8 +491,15 @@ function decide(state, options = {}) {
   // toward an existing meal. Measure against the SAME food set after eating.
   // Terminal outcomes and proven traps still dominate this bounded preference.
   if (state.snakes.length === 2 && !state.constrictor && evaluator.weights.foodProgress > 0) {
-    const foods = [];
+    let foods = [];
     for (let q = 0; q < state.g.size; q++) if (state.food[q]) foods.push(q);
+    if (evaluator.weights.foodRace > 0) {
+      evaluator.analyze(state);
+      const mineDistance = evaluator.distances[0], enemyDistance = evaluator.distances[1];
+      const available = foods.filter(q => mineDistance[q] < 999 && (mineDistance[q] < enemyDistance[q]
+        || (mineDistance[q] === enemyDistance[q] && state.snakes[0].body.length > state.snakes[1].body.length)));
+      if (available.length) foods = available;
+    }
     const distance = p => Math.min(...foods.map(q => {
       let dx = Math.abs(p % state.g.width - q % state.g.width), dy = Math.abs((p / state.g.width | 0) - (q / state.g.width | 0));
       if (state.g.wrapped) { dx = Math.min(dx, state.g.width - dx); dy = Math.min(dy, state.g.height - dy); }
@@ -550,8 +572,10 @@ function decide(state, options = {}) {
       key = Math.imul(key ^ 65535, 16777619);
     }
     const previous = variations.get(key);
+    const foodCells = [];
+    for (let q = 0; q < s.g.size; q++) if (s.food[q]) foodCells.push(q);
     const choices = s.snakes.map((snake, i) => orderMoves(s, i, occupied,
-      i === 0 ? (preferred >= 0 ? preferred : previous?.move ?? -1) : -1));
+      i === 0 ? (preferred >= 0 ? preferred : previous?.move ?? -1) : -1, foodCells));
     const replyMoves = new Int8Array(4).fill(-1);
     if (ply === 0) choices[0] = choices[0].filter(move => allowedRoot.includes(move));
     const joint = new Array(s.snakes.length).fill(0);
@@ -606,7 +630,7 @@ function decide(state, options = {}) {
 
 // worker.mjs
 
-const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.6.0' };
+const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.7.0' };
 
 async function handle(request, env = {}) {
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
@@ -626,7 +650,7 @@ async function handle(request, env = {}) {
     // Fixed work is essential: deployed Workers freeze timers during CPU work.
     const baseNodes = Number(env.SEARCH_NODES) || 256;
     const duel = payload.board?.snakes?.length === 2 && payload.game?.ruleset?.name !== 'constrictor';
-    const result = chooseMove(payload, { nodes: duel ? baseNodes * 4 : baseNodes, depth: 7 });
+    const result = chooseMove(payload, { nodes: duel ? baseNodes * 2 : baseNodes, depth: 7 });
     return json({ move: result.move });
   } catch (error) {
     console.error('move failed:', error.message);
