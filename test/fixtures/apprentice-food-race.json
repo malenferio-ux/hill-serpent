@@ -1,0 +1,130 @@
+{
+  "game": {
+    "id": "7bd1d630-a1b0-459a-bab5-cbdedc737cf5",
+    "timeout": 500,
+    "ruleset": {
+      "name": "standard",
+      "settings": {
+        "hazardDamagePerTurn": 15
+      }
+    }
+  },
+  "turn": 52,
+  "board": {
+    "width": 11,
+    "height": 11,
+    "snakes": [
+      {
+        "id": "3edbd97e-696e-49dc-8ff6-923f369a6c99",
+        "name": "apprentice",
+        "health": 83,
+        "body": [
+          {
+            "x": 2,
+            "y": 4
+          },
+          {
+            "x": 3,
+            "y": 4
+          },
+          {
+            "x": 3,
+            "y": 5
+          },
+          {
+            "x": 3,
+            "y": 6
+          },
+          {
+            "x": 4,
+            "y": 6
+          }
+        ],
+        "head": {
+          "x": 2,
+          "y": 4
+        },
+        "length": 5
+      },
+      {
+        "id": "a27e34e9-917a-4ba1-ae7b-2522bcaee88b",
+        "name": "Hill Serpent",
+        "health": 68,
+        "body": [
+          {
+            "x": 5,
+            "y": 3
+          },
+          {
+            "x": 5,
+            "y": 4
+          },
+          {
+            "x": 5,
+            "y": 5
+          },
+          {
+            "x": 6,
+            "y": 5
+          },
+          {
+            "x": 6,
+            "y": 4
+          }
+        ],
+        "head": {
+          "x": 5,
+          "y": 3
+        },
+        "length": 5
+      }
+    ],
+    "food": [
+      {
+        "x": 10,
+        "y": 0
+      },
+      {
+        "x": 1,
+        "y": 9
+      },
+      {
+        "x": 1,
+        "y": 4
+      }
+    ],
+    "hazards": []
+  },
+  "you": {
+    "id": "a27e34e9-917a-4ba1-ae7b-2522bcaee88b",
+    "name": "Hill Serpent",
+    "health": 68,
+    "body": [
+      {
+        "x": 5,
+        "y": 3
+      },
+      {
+        "x": 5,
+        "y": 4
+      },
+      {
+        "x": 5,
+        "y": 5
+      },
+      {
+        "x": 6,
+        "y": 5
+      },
+      {
+        "x": 6,
+        "y": 4
+      }
+    ],
+    "head": {
+      "x": 5,
+      "y": 3
+    },
+    "length": 5
+  }
+}
