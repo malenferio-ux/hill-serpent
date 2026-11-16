@@ -3,11 +3,12 @@ import { DIRECTIONS, fromRequest, occupancy, legalMoves, step } from './game.mjs
 export const DEFAULT_WEIGHTS = Object.freeze({
   territory: 1.8, length: 32, food: 6, health: 0.16,
   space: 1.2, trap: 450, mobility: 8, center: 0.35,
-  staticSafety: 0.5, territoryCap: 0, foodPotential: 0, tailRisk: 0,
+  staticSafety: 0.5, territoryCap: 0, foodPotential: 0, tailRisk: 0, staticSpace: 0, staticTailSteps: 2, foodProgress: 0,
 });
 // Keep the four-player policy while improving food progress in duels.
 export const DUEL_WEIGHTS = Object.freeze({
   ...DEFAULT_WEIGHTS, length: 48, territoryCap: 0.4, foodPotential: 1, tailRisk: 1,
+  staticSpace: 0.5, staticTailSteps: 1, foodProgress: 2,
 });
 const WIN = 1_000_000, LOSS = -1_000_000, DRAW = -10_000;
 const STOP = Symbol('search budget exhausted');
@@ -79,7 +80,7 @@ export class Evaluator {
       }
       // Temporal flood fill is optimistic: it can count the whole board even
       // inside a sealed corridor because every body eventually "disappears".
-      // Also measure the region with only the next two tail releases open.
+      // Also measure the region with only imminent tail releases open.
       // Reaching a moving tail alone is not a certificate that growing is safe.
       if (this.duel && this.weights.staticSafety > 0 && !state.constrictor) {
         const seen = this.seen;
@@ -90,17 +91,18 @@ export class Evaluator {
         let connected = false;
         // Stop only after certifying enough room. A tiny tail-connected region
         // can still become a trap after growth.
-        while (read < end && room < s.body.length + 2) {
+        const roomTarget = this.weights.staticSpace > 0 ? Math.ceil(s.body.length * 2.5) + 1 : s.body.length + 2;
+        while (read < end && room < roomTarget) {
           const p = queue[read++];
           for (let m = 0; m < 4; m++) {
             const q = g.next[p * 4 + m];
             if (q < 0 || seen[q]) continue;
-            if (release[q] > 2 || release[q] > seen[p]) continue;
+            if (release[q] > this.weights.staticTailSteps || release[q] > seen[p]) continue;
             if (!state.food[q] && s.health <= 1 + state.hazards[q] * state.hazardDamage) continue;
             seen[q] = seen[p] + 1; queue[end++] = q;
             room += state.hazards[q] ? 0.25 : 1;
             if (q === tail && q !== s.body[0]) connected = true;
-            if (room >= s.body.length + 2) break;
+            if (room >= roomTarget) break;
           }
         }
         this.staticSpaces[i] = room;
@@ -138,7 +140,9 @@ export class Evaluator {
     // more than repeatedly reclaiming a few central cells.
     const territory = this.duel && !state.constrictor && w.territoryCap > 0
       ? Math.min(this.areas[index], Math.max(length * 2, state.g.size * w.territoryCap)) : this.areas[index];
-    let score = w.territory * territory + w.space * Math.min(room, length * 2.5)
+    const mix = this.duel && !state.constrictor ? w.staticSpace : 0;
+    const capacity = (1 - mix) * room + mix * this.staticSpaces[index];
+    let score = w.territory * territory + w.space * Math.min(capacity, length * 2.5)
       + (state.constrictor ? 0 : w.length * effectiveLength) - w.trap * deficit;
     if (this.duel && w.staticSafety > 0 && !state.constrictor) {
       const openRoom = this.staticSpaces[index];
@@ -281,17 +285,37 @@ export function chooseMove(request, options = {}) {
 export function decide(state, options = {}) {
   const nodeLimit = Math.max(64, Math.min(40_000, Number(options.nodes) || 3200));
   const maxDepth = Math.max(1, Math.min(12, Number(options.depth) || 7));
-  const evaluator = new Evaluator(state.g, state.snakes.length, options.weights);
   const rootOccupied = occupancy(state);
   const mine = legalMoves(state, 0, rootOccupied);
+  if (mine.length === 1) return { move: DIRECTIONS[mine[0]], score: 0, nodes: 0, depth: 0, fallbackScores: {}, survival: {}, forced: true };
+  const evaluator = new Evaluator(state.g, state.snakes.length, options.weights);
   const opponents = state.snakes.map((s, i) => i ? legalMoves(state, i, rootOccupied) : mine);
   let nodes = 0, completedDepth = 0;
   let bestMove = mine[0], bestScore = LOSS;
   const scores = {}, survival = {};
   const guardPenalty = new Float64Array(4);
+  // A small root preference keeps shallow even-depth searches progressing
+  // toward an existing meal. Measure against the SAME food set after eating.
+  // Terminal outcomes and proven traps still dominate this bounded preference.
+  if (state.snakes.length === 2 && !state.constrictor && evaluator.weights.foodProgress > 0) {
+    const foods = [];
+    for (let q = 0; q < state.g.size; q++) if (state.food[q]) foods.push(q);
+    const distance = p => Math.min(...foods.map(q => {
+      let dx = Math.abs(p % state.g.width - q % state.g.width), dy = Math.abs((p / state.g.width | 0) - (q / state.g.width | 0));
+      if (state.g.wrapped) { dx = Math.min(dx, state.g.width - dx); dy = Math.min(dy, state.g.height - dy); }
+      return dx + dy;
+    }));
+    if (foods.length) {
+      const before = distance(state.snakes[0].body[0]);
+      for (const move of mine) {
+        const target = state.g.next[state.snakes[0].body[0] * 4 + move];
+        if (target >= 0) guardPenalty[move] = evaluator.weights.foodProgress * (distance(target) - before);
+      }
+    }
+  }
   if (options.soloGuard !== false && state.snakes.length === 2 && !state.constrictor) {
     for (const move of mine) {
-      const probe = probeSurvival(state, move);
+      const probe = probeSurvival(state, move, Math.min(64, Math.max(20, state.snakes[0].body.length + 8)), 256);
       const ownHead = state.snakes[0].body[0], otherHead = state.snakes[1].body[0], target = state.g.next[ownHead * 4 + move];
       const x = target % state.g.width, y = target / state.g.width | 0;
       const edge = Math.min(x, y, state.g.width - 1 - x, state.g.height - 1 - y);
@@ -304,7 +328,7 @@ export function decide(state, options = {}) {
         if (joint.trapped) { probe.trapped = true; probe.deepest = joint.deepest; probe.kind = 'forced-replies'; }
       }
       survival[DIRECTIONS[move]] = probe;
-      if (probe.trapped) guardPenalty[move] = Math.max(0, Math.min(5000, Number(options.guardPenalty ?? 1200)));
+      if (probe.trapped) guardPenalty[move] += Math.max(0, Math.min(5000, Number(options.guardPenalty ?? 1200)));
     }
   }
 
@@ -330,6 +354,8 @@ export function decide(state, options = {}) {
     scores[DIRECTIONS[move]] = adjusted;
     if (allowedRoot.includes(move) && adjusted > bestScore) { bestScore = adjusted; bestMove = move; }
   }
+
+  if (allowedRoot.length === 1) return { move: DIRECTIONS[allowedRoot[0]], score: bestScore, nodes: 0, depth: 0, fallbackScores: scores, survival, forced: true };
 
   function search(s, depth, alpha, beta, ply, preferred = -1) {
     const terminal = !s.snakes[0].alive || (s.snakes.length > 1 && !s.snakes.slice(1).some(x => x.alive));
