@@ -20,13 +20,13 @@ test('leaves the boundary before the real Novice-game corridor closes', async ()
 
 test('real Novice-game regression: takes the open exit instead of the bottom food trap', async () => {
   const request = JSON.parse(await readFile(new URL('./fixtures/novice-turn-344.json', import.meta.url)));
-  for (const nodes of [256, 3200]) assert.equal(chooseMove(request, { nodes }).move, 'up');
+  for (const nodes of [256, 512, 3200]) assert.equal(chooseMove(request, { nodes }).move, 'up');
 });
 
 test('real rematch opening: takes nearby safe food in two moves against every immediate reply', async () => {
   const request = JSON.parse(await readFile(new URL('./fixtures/rematch-opening.json', import.meta.url)));
   const state = fromRequest(request);
-  for (const nodes of [256, 3200]) {
+  for (const nodes of [256, 512, 3200]) {
     const first = DIRECTIONS.indexOf(chooseMove(request, { nodes }).move);
     for (const reply of legalMoves(state, 1)) {
       const next = step(state, [first, reply]);
@@ -44,7 +44,7 @@ test('real rematch regression: leaves the central loop toward food', async () =>
   const request = JSON.parse(await readFile(new URL('./fixtures/rematch-turn-11.json', import.meta.url)));
   const distance = p => Math.min(...request.board.food.map(f => Math.abs(p.x - f.x) + Math.abs(p.y - f.y)));
   const state = fromRequest(request);
-  for (const nodes of [256, 3200]) {
+  for (const nodes of [256, 512, 3200]) {
     const move = DIRECTIONS.indexOf(chooseMove(request, { nodes }).move);
     const next = state.g.next[state.snakes[0].body[0] * 4 + move];
     assert.ok(legalMoves(state, 0).includes(move));
@@ -55,24 +55,24 @@ test('real rematch regression: leaves the central loop toward food', async () =>
 
 test('Apprentice regression: avoids the four-step wall corridor', async () => {
   const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-corridor.json', import.meta.url)));
-  for (const nodes of [256, 3200]) {
+  for (const nodes of [256, 512, 3200]) {
     const result = chooseMove(request, { nodes });
     if (nodes === 256) assert.equal(result.move, 'down');
     assert.equal(result.survival.up.trapped, true);
     assert.ok(result.survival.up.deepest <= 4);
-    assert.ok(Object.values(result.survival).every(p => p.nodes <= 384));
+    assert.ok(Object.values(result.survival).every(p => p.nodes <= 512));
   }
 });
 
 test('Apprentice regression: a reachable tail does not make a cramped pocket safe', async () => {
   const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-pocket.json', import.meta.url)));
-  for (const nodes of [256, 3200]) assert.equal(chooseMove(request, { nodes }).move, 'up');
+  for (const nodes of [256, 512, 3200]) assert.equal(chooseMove(request, { nodes }).move, 'up');
 });
 
 
 test('Apprentice wall-cut: the shorter opponent can still seal the side exit with its neck', async () => {
   const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-wall-cut.json', import.meta.url)));
-  for (const nodes of [256, 3200]) {
+  for (const nodes of [256, 512, 3200]) {
     const result = chooseMove(request, { nodes });
     assert.equal(result.move, 'right');
     assert.equal(result.survival.left.kind, 'forced-replies');
@@ -82,10 +82,20 @@ test('Apprentice wall-cut: the shorter opponent can still seal the side exit wit
 
 test('Apprentice top-edge cut: exits before the opponent builds a moving body barrier', async () => {
   const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-top-cut.json', import.meta.url)));
-  for (const nodes of [256, 3200]) {
+  for (const nodes of [256, 512, 3200]) {
     const result = chooseMove(request, { nodes });
     assert.equal(result.move, 'down');
     assert.equal(result.survival.right.kind, 'forced-replies');
     assert.ok(result.survival.right.replyNodes <= 256);
+  }
+});
+
+test('Apprentice long corridor: recognizes a dead end beyond the old twelve-step horizon', async () => {
+  const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-long-corridor.json', import.meta.url)));
+  for (const nodes of [256, 512, 3200]) {
+    const result = chooseMove(request, { nodes });
+    assert.equal(result.survival.down.trapped, true);
+    assert.equal(result.survival.down.deepest, 14);
+    assert.equal(result.move, 'up');
   }
 });
