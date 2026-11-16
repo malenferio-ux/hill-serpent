@@ -1,0 +1,109 @@
+{
+  "game": {
+    "id": "988f3552-592f-4c43-8751-cf2d451ae503",
+    "timeout": 500,
+    "ruleset": {
+      "name": "standard",
+      "version": "v1.2.3",
+      "settings": {
+        "hazardDamagePerTurn": 15,
+        "foodSpawnChance": 15,
+        "minimumFood": 1
+      }
+    }
+  },
+  "turn": 0,
+  "board": {
+    "width": 11,
+    "height": 11,
+    "snakes": [
+      {
+        "id": "1bc1e55c-0e44-4e00-946c-54f3f24b2dcb",
+        "name": "Hill Serpent",
+        "health": 100,
+        "body": [
+          {
+            "x": 1,
+            "y": 5
+          },
+          {
+            "x": 1,
+            "y": 5
+          },
+          {
+            "x": 1,
+            "y": 5
+          }
+        ],
+        "head": {
+          "x": 1,
+          "y": 5
+        },
+        "length": 3
+      },
+      {
+        "id": "6850cb9d-bc9e-4340-a23e-d070aa98bf29",
+        "name": "novice",
+        "health": 100,
+        "body": [
+          {
+            "x": 9,
+            "y": 5
+          },
+          {
+            "x": 9,
+            "y": 5
+          },
+          {
+            "x": 9,
+            "y": 5
+          }
+        ],
+        "head": {
+          "x": 9,
+          "y": 5
+        },
+        "length": 3
+      }
+    ],
+    "food": [
+      {
+        "x": 0,
+        "y": 6
+      },
+      {
+        "x": 10,
+        "y": 6
+      },
+      {
+        "x": 5,
+        "y": 5
+      }
+    ],
+    "hazards": []
+  },
+  "you": {
+    "id": "1bc1e55c-0e44-4e00-946c-54f3f24b2dcb",
+    "name": "Hill Serpent",
+    "health": 100,
+    "body": [
+      {
+        "x": 1,
+        "y": 5
+      },
+      {
+        "x": 1,
+        "y": 5
+      },
+      {
+        "x": 1,
+        "y": 5
+      }
+    ],
+    "head": {
+      "x": 1,
+      "y": 5
+    },
+    "length": 3
+  }
+}
