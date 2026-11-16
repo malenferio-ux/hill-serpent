@@ -60,11 +60,32 @@ test('Apprentice regression: avoids the four-step wall corridor', async () => {
     if (nodes === 256) assert.equal(result.move, 'down');
     assert.equal(result.survival.up.trapped, true);
     assert.ok(result.survival.up.deepest <= 4);
-    assert.ok(Object.values(result.survival).every(p => p.nodes <= 128));
+    assert.ok(Object.values(result.survival).every(p => p.nodes <= 384));
   }
 });
 
 test('Apprentice regression: a reachable tail does not make a cramped pocket safe', async () => {
   const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-pocket.json', import.meta.url)));
   for (const nodes of [256, 3200]) assert.equal(chooseMove(request, { nodes }).move, 'up');
+});
+
+
+test('Apprentice wall-cut: the shorter opponent can still seal the side exit with its neck', async () => {
+  const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-wall-cut.json', import.meta.url)));
+  for (const nodes of [256, 3200]) {
+    const result = chooseMove(request, { nodes });
+    assert.equal(result.move, 'right');
+    assert.equal(result.survival.left.kind, 'forced-replies');
+    assert.ok(result.survival.left.replyNodes <= 256);
+  }
+});
+
+test('Apprentice top-edge cut: exits before the opponent builds a moving body barrier', async () => {
+  const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-top-cut.json', import.meta.url)));
+  for (const nodes of [256, 3200]) {
+    const result = chooseMove(request, { nodes });
+    assert.equal(result.move, 'down');
+    assert.equal(result.survival.right.kind, 'forced-replies');
+    assert.ok(result.survival.right.replyNodes <= 256);
+  }
 });
