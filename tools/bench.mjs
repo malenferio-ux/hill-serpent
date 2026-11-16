@@ -1,4 +1,5 @@
 import os from 'node:os';
+import { gunzipSync } from 'node:zlib';
 import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import { chooseMove } from '../src/agent.mjs';
 import { toRequest, step, legalMoves } from '../src/game.mjs';
@@ -17,7 +18,8 @@ for (const mode of ['duel', 'standard', 'royale', 'constrictor']) {
 }
 const rows = [];
 if (args.corpus) {
-  const corpus = JSON.parse(await readFile(args.corpus, 'utf8'));
+  const raw = await readFile(args.corpus);
+  const corpus = JSON.parse((args.corpus.endsWith('.gz') ? gunzipSync(raw) : raw).toString('utf8'));
   for (const request of corpus) samples.push({ mode: request.game.ruleset.name, request });
 }
 for (const nodes of [128, 256, 512, 1024, 3200]) {
