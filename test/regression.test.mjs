@@ -99,3 +99,19 @@ test('Apprentice long corridor: recognizes a dead end beyond the old twelve-step
     assert.equal(result.move, 'up');
   }
 });
+
+test('Apprentice food race: moves toward the available meal instead of a meal the rival reaches first', async () => {
+  const request = JSON.parse(await readFile(new URL('./fixtures/apprentice-food-race.json', import.meta.url)));
+  // Real turn 52: meal (1,4) is five steps away for us, one for the rival.
+  // Meal (10,0) is eight steps for us and twelve for the rival.
+  const available = { x: 10, y: 0 }, lost = { x: 1, y: 4 };
+  const distance = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+  const state = fromRequest(request);
+  for (const nodes of [256, 512, 1024, 3200]) {
+    const result = chooseMove(request, { nodes });
+    const p = state.g.next[state.snakes[0].body[0] * 4 + DIRECTIONS.indexOf(result.move)];
+    const target = { x: p % 11, y: Math.floor(p / 11) };
+    assert.ok(distance(target, available) < distance(request.you.head, available));
+    assert.ok(distance(target, lost) > distance(request.you.head, lost));
+  }
+});
