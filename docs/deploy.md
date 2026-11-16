@@ -40,9 +40,9 @@ npm run deploy:pages
    `.env`, `.dev.vars` и `results`.
 3. В папке проекта выполните `npm ci`, затем `npx wrangler login`.
    В открывшемся браузере авторизуйте официальную утилиту Cloudflare.
-4. В `wrangler.toml` при желании измените `name` на уникальное имя.
+4. В `wrangler.worker.toml` при желании измените `name` на уникальное имя.
    В `[vars]` можно добавить `SNAKE_AUTHOR = "ваш GitHub логин"`.
-5. Выполните `npm run deploy`. При первом размещении Wrangler может предложить
+5. Выполните `npm run deploy:worker`. При первом размещении Wrangler может предложить
    выбрать поддомен Workers. Используйте бесплатный `workers.dev`.
 6. Сохраните **реальный** URL из успешного вывода команды. Проверьте:
 

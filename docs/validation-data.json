@@ -205,6 +205,8 @@
     }
   },
   "courseBenchmarksTested": false,
-  "arenaPublished": false,
-  "githubPublished": false
+  "arenaPublished": true,
+  "githubPublished": true,
+  "publishedEndpoint": "https://hill-serpent.pages.dev",
+  "arenaProfile": "https://arena.battlesnake.com/battlesnakes/353a87c8-5303-4ead-aa45-38b72b2ba12e/profile"
 }
