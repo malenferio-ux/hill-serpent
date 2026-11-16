@@ -87,3 +87,12 @@ HTTPS и поддомен настраиваются средствами выб
 Официальные источники: [workers.dev](https://developers.cloudflare.com/workers/configuration/routing/workers-dev/),
 [Wrangler](https://developers.cloudflare.com/workers/wrangler/),
 [лимиты](https://developers.cloudflare.com/workers/platform/limits/).
+
+## Текущие бюджеты (версия 1.7)
+
+`SEARCH_NODES=256` в конфигурации Cloudflare задаёт базу. Webhook умножает её
+на два для запросов с двумя змейками вне Constrictor (512 узлов); остальные
+запросы используют базу. Отдельные проверки выживания ограничены 256 посещениями
+каждая на направление. Простой вынужденный ход возвращается без поиска.
+Локальный сервер использует ровно заданный `SEARCH_NODES`, по умолчанию 3200.
+Реальные замеры CPU/задержки нужно проверять после публикации.

@@ -1,0 +1,29 @@
+{
+  "games": 64,
+  "seed": 34100000,
+  "weights": {
+    "foodRace": 1
+  },
+  "mode": "duel",
+  "opponent": "legacy",
+  "nodes": 512,
+  "wins": 36,
+  "losses": 28,
+  "draws": 0,
+  "turns": 16886,
+  "calls": 16886,
+  "maxMs": 6.060708000000002,
+  "loopTurns": 479,
+  "opponentLoopTurns": 440,
+  "firstFoodTurns": 64,
+  "opponentFirstFoodTurns": 64,
+  "finalLength": 1614,
+  "score": 0.5625,
+  "meanMs": 1.327429716688381,
+  "loopRate": 0.028366694302972877,
+  "meanFirstFood": 1,
+  "meanFinalLength": 25.21875,
+  "opponentLoopRate": 0.026057088712542933,
+  "opponentMeanFirstFood": 1,
+  "note": "Held-out 64 paired starts, final food-race policy vs frozen v1.6.1, both main budget 512 plus bounded safety probes. No extra behind-length weight was adopted."
+}

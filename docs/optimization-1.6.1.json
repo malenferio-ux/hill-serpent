@@ -1,0 +1,10 @@
+{
+  "baseline": "1.6.0",
+  "candidate": "1.6.1",
+  "nodes": 512,
+  "decisions": 4282,
+  "matchingDecisions": 4282,
+  "transitions": 4282,
+  "matchingTransitions": 4282,
+  "note": "Different deployed budget (1024 -> 512). At the SAME 512-node budget, allocation/scan optimizations preserve every tested decision and transition."
+}

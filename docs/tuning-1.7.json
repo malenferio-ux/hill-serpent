@@ -1,0 +1,152 @@
+{
+  "training.json": [
+    {
+      "games": 32,
+      "seed": 32100000,
+      "weights": {
+        "foodRace": 1
+      },
+      "mode": "duel",
+      "opponent": "legacy",
+      "nodes": 512,
+      "wins": 18,
+      "losses": 14,
+      "draws": 0,
+      "turns": 8751,
+      "calls": 8751,
+      "maxMs": 6.782042000000001,
+      "loopTurns": 145,
+      "opponentLoopTurns": 190,
+      "firstFoodTurns": 32,
+      "opponentFirstFoodTurns": 32,
+      "finalLength": 860,
+      "score": 0.5625,
+      "meanMs": 1.3074711202148297,
+      "loopRate": 0.016569534910295967,
+      "meanFirstFood": 1,
+      "meanFinalLength": 26.875,
+      "opponentLoopRate": 0.021711804365215404,
+      "opponentMeanFirstFood": 1
+    },
+    {
+      "games": 32,
+      "seed": 32100000,
+      "weights": {
+        "foodRace": 1,
+        "behindLength": 1.5
+      },
+      "mode": "duel",
+      "opponent": "legacy",
+      "nodes": 512,
+      "wins": 20,
+      "losses": 12,
+      "draws": 0,
+      "turns": 8081,
+      "calls": 8081,
+      "maxMs": 4.7445000000006985,
+      "loopTurns": 154,
+      "opponentLoopTurns": 197,
+      "firstFoodTurns": 32,
+      "opponentFirstFoodTurns": 32,
+      "finalLength": 827,
+      "score": 0.625,
+      "meanMs": 1.327066215814894,
+      "loopRate": 0.019057047395124364,
+      "meanFirstFood": 1,
+      "meanFinalLength": 25.84375,
+      "opponentLoopRate": 0.02437817101843831,
+      "opponentMeanFirstFood": 1
+    },
+    {
+      "games": 32,
+      "seed": 32100000,
+      "weights": {
+        "foodRace": 1,
+        "leadTarget": 8
+      },
+      "mode": "duel",
+      "opponent": "legacy",
+      "nodes": 512,
+      "wins": 18,
+      "losses": 14,
+      "draws": 0,
+      "turns": 9034,
+      "calls": 9034,
+      "maxMs": 2.6415000000051805,
+      "loopTurns": 144,
+      "opponentLoopTurns": 185,
+      "firstFoodTurns": 32,
+      "opponentFirstFoodTurns": 32,
+      "finalLength": 892,
+      "score": 0.5625,
+      "meanMs": 1.3084731142350918,
+      "loopRate": 0.01593978304184193,
+      "meanFirstFood": 1,
+      "meanFinalLength": 27.875,
+      "opponentLoopRate": 0.020478193491255257,
+      "opponentMeanFirstFood": 1
+    }
+  ],
+  "heldout.json": [
+    {
+      "games": 64,
+      "seed": 33100000,
+      "weights": {
+        "foodRace": 1,
+        "behindLength": 1.5
+      },
+      "mode": "duel",
+      "opponent": "legacy",
+      "nodes": 512,
+      "wins": 31,
+      "losses": 33,
+      "draws": 0,
+      "turns": 17075,
+      "calls": 17075,
+      "maxMs": 7.676250000000001,
+      "loopTurns": 411,
+      "opponentLoopTurns": 413,
+      "firstFoodTurns": 64,
+      "opponentFirstFoodTurns": 64,
+      "finalLength": 1719,
+      "score": 0.484375,
+      "meanMs": 1.33101021200588,
+      "loopRate": 0.024070278184480234,
+      "meanFirstFood": 1,
+      "meanFinalLength": 26.859375,
+      "opponentLoopRate": 0.024187408491947292,
+      "opponentMeanFirstFood": 1
+    }
+  ],
+  "food-only-heldout.json": [
+    {
+      "games": 64,
+      "seed": 34100000,
+      "weights": {
+        "foodRace": 1
+      },
+      "mode": "duel",
+      "opponent": "legacy",
+      "nodes": 512,
+      "wins": 36,
+      "losses": 28,
+      "draws": 0,
+      "turns": 16886,
+      "calls": 16886,
+      "maxMs": 6.060708000000002,
+      "loopTurns": 479,
+      "opponentLoopTurns": 440,
+      "firstFoodTurns": 64,
+      "opponentFirstFoodTurns": 64,
+      "finalLength": 1614,
+      "score": 0.5625,
+      "meanMs": 1.327429716688381,
+      "loopRate": 0.028366694302972877,
+      "meanFirstFood": 1,
+      "meanFinalLength": 25.21875,
+      "opponentLoopRate": 0.026057088712542933,
+      "opponentMeanFirstFood": 1
+    }
+  ],
+  "note": "Food-race-only policy adopted. The extra behind-length coefficient failed held-out validation and was omitted."
+}

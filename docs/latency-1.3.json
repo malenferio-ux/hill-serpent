@@ -1,0 +1,47 @@
+{
+  "machine": {
+    "platform": "darwin",
+    "arch": "arm64",
+    "cpu": "Apple M4 Pro",
+    "node": "v26.12.0"
+  },
+  "singleDecisionThread": true,
+  "v8Flags": [
+    "--single-threaded",
+    "--single-threaded-gc"
+  ],
+  "positions": 1380,
+  "note": "Local timing is not a production Cloudflare CPU measurement or network latency guarantee.",
+  "rows": [
+    {
+      "nodes": 128,
+      "samples": 1500,
+      "coldMs": 6.915083000000003,
+      "meanMs": 0.6653137686666682,
+      "p50Ms": 0.5730829999999969,
+      "p95Ms": 0.7990419999999858,
+      "maxMs": 14.474625000000003,
+      "cpuMsPerMove": 0.6660406666666667
+    },
+    {
+      "nodes": 256,
+      "samples": 1500,
+      "coldMs": 0.9812500000000455,
+      "meanMs": 1.0539303479999946,
+      "p50Ms": 1.0736249999999927,
+      "p95Ms": 1.2677499999999782,
+      "maxMs": 3.1652500000000146,
+      "cpuMsPerMove": 1.054522
+    },
+    {
+      "nodes": 3200,
+      "samples": 1500,
+      "coldMs": 11.333166999999776,
+      "meanMs": 11.564244385999977,
+      "p50Ms": 12.513708999998926,
+      "p95Ms": 14.680958000000828,
+      "maxMs": 27.363541999999143,
+      "cpuMsPerMove": 11.557262666666666
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "version": "1.6.0",
+  "window": "Cloudflare dashboard Last 24 hours before mitigation",
+  "success": 30168,
+  "errors": 142,
+  "exceededCpu": 142,
+  "exceededMemory": 0,
+  "internal": 0,
+  "mitigation": "Restore deployed main budget to 512, remove avoidable array copies and repeated board scans in 1.6.1. No paid plan changes."
+}

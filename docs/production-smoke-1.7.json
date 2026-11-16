@@ -1,0 +1,280 @@
+{
+  "metadata": {
+    "apiversion": "1",
+    "author": "malenferio-ux",
+    "color": "#8b5cf6",
+    "head": "default",
+    "tail": "default",
+    "version": "1.7.0"
+  },
+  "requests": 33,
+  "meanMs": 54.82476012121212,
+  "p95Ms": 128.099625,
+  "maxMs": 144.84037500000005,
+  "rows": [
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 128.099625
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 144.84037500000005
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 56.47124999999994
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "left",
+      "expected": "left",
+      "ms": 48.96345900000006
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 69.90504099999998
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "ms": 43.755041000000006
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 62.64791700000001
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 55.820708999999965
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 50.29479100000003
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 47.118292
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 54.17170800000008
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 71.51612499999987
+    },
+    {
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 40.216458999999986
+    },
+    {
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 30.79495799999995
+    },
+    {
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 67.0826669999999
+    },
+    {
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 24.276000000000067
+    },
+    {
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 34.965625000000045
+    },
+    {
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 26.188709000000017
+    },
+    {
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 69.13904200000002
+    },
+    {
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 20.620374999999967
+    },
+    {
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 81.35391600000003
+    },
+    {
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 26.893084000000044
+    },
+    {
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 43.99416599999995
+    },
+    {
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 19.418791000000056
+    },
+    {
+      "mode": "standard",
+      "turn": 344,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 56.104916
+    },
+    {
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 59.23695900000007
+    },
+    {
+      "mode": "standard",
+      "turn": 11,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "ms": 42.29341700000009
+    },
+    {
+      "mode": "standard",
+      "turn": 208,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "ms": 25.11974999999984
+    },
+    {
+      "mode": "standard",
+      "turn": 203,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 117.18162499999994
+    },
+    {
+      "mode": "standard",
+      "turn": 51,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 36.51258300000018
+    },
+    {
+      "mode": "standard",
+      "turn": 219,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "ms": 32.08304199999975
+    },
+    {
+      "mode": "standard",
+      "turn": 372,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "ms": 67.71670900000026
+    },
+    {
+      "mode": "standard",
+      "turn": 52,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "ms": 54.41995799999995
+    }
+  ]
+}
