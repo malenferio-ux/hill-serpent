@@ -241,6 +241,39 @@ function probeSurvival(state, firstMove, horizon = 12, limit = 128) {
   return { trapped: !survives && !exhausted, nodes, deepest };
 }
 
+// AND/OR search for a forced loss, including the opponent's NEW body.
+// A budget exhaustion is unknown, never a certificate of a trap.
+function probeReplies(state, firstMove, horizon = 20, limit = 256) {
+  let nodes = 0, deepest = 0, exhausted = false;
+  function losing(s, remaining, forced = -1, lastMove = firstMove) {
+    if (!s.snakes[0].alive) return s.snakes[1].alive;
+    if (!s.snakes[1].alive || !remaining) return false;
+    const own = forced >= 0 ? [forced] : legalMoves(s, 0);
+    own.sort((a, b) => (b === lastMove) - (a === lastMove));
+    for (const m of own) {
+      const target = s.g.next[s.snakes[0].body[0] * 4 + m];
+      const replies = legalMoves(s, 1);
+      const distance = o => {
+        const p = s.g.next[s.snakes[1].body[0] * 4 + o];
+        if (p < 0 || target < 0) return 999;
+        let dx = Math.abs(p % s.g.width - target % s.g.width), dy = Math.abs((p / s.g.width | 0) - (target / s.g.width | 0));
+        if (s.g.wrapped) { dx = Math.min(dx, s.g.width - dx); dy = Math.min(dy, s.g.height - dy); }
+        return dx + dy - (o === m ? 0.1 : 0);
+      };
+      replies.sort((a, b) => distance(a) - distance(b));
+      let kill = false;
+      for (const reply of replies) {
+        if (nodes >= limit) { exhausted = true; return false; }
+        nodes++; deepest = Math.max(deepest, horizon - remaining + 1);
+        if (losing(step(s, [m, reply]), remaining - 1, -1, m)) { kill = true; break; }
+      }
+      if (!kill) return false;
+    }
+    return true;
+  }
+  return { trapped: losing(state, horizon, firstMove), nodes, deepest, exhausted };
+}
+
 export function chooseMove(request, options = {}) {
   return decide(fromRequest(request), options);
 }
@@ -259,10 +292,26 @@ export function decide(state, options = {}) {
   if (options.soloGuard !== false && state.snakes.length === 2 && !state.constrictor) {
     for (const move of mine) {
       const probe = probeSurvival(state, move);
+      const ownHead = state.snakes[0].body[0], otherHead = state.snakes[1].body[0], target = state.g.next[ownHead * 4 + move];
+      const x = target % state.g.width, y = target / state.g.width | 0;
+      const edge = Math.min(x, y, state.g.width - 1 - x, state.g.height - 1 - y);
+      const gap = Math.abs(ownHead % state.g.width - otherHead % state.g.width) + Math.abs((ownHead / state.g.width | 0) - (otherHead / state.g.width | 0));
+      if (options.replyGuard !== false && !probe.trapped && (gap <= 5 || (edge <= 2 && gap <= 10))) {
+        const joint = probeReplies(state, move, 20, Math.max(64, Math.min(512, Number(options.replyNodes) || 256)));
+        probe.soloNodes = probe.nodes; probe.replyNodes = joint.nodes;
+        probe.replyExhausted = joint.exhausted; probe.replyDepth = joint.deepest;
+        probe.nodes += joint.nodes;
+        if (joint.trapped) { probe.trapped = true; probe.deepest = joint.deepest; probe.kind = 'forced-replies'; }
+      }
       survival[DIRECTIONS[move]] = probe;
       if (probe.trapped) guardPenalty[move] = Math.max(0, Math.min(5000, Number(options.guardPenalty ?? 1200)));
     }
   }
+
+  // A completed AND/OR proof can exclude a root move. If every move loses,
+  // retain all of them so the ordinary search can choose how to resist.
+  const unprovenRoot = mine.filter(move => survival[DIRECTIONS[move]]?.kind !== 'forced-replies');
+  const allowedRoot = unprovenRoot.length ? unprovenRoot : mine;
 
   // An always-complete fallback checks every immediate head threat, including
   // food-induced changes in length. No partial deep iteration may replace it.
@@ -279,7 +328,7 @@ export function decide(state, options = {}) {
     const score = evaluator.evaluate(next, 1) - danger * 200_000;
     const adjusted = Math.abs(score) < WIN / 2 ? score - guardPenalty[move] : score;
     scores[DIRECTIONS[move]] = adjusted;
-    if (adjusted > bestScore) { bestScore = adjusted; bestMove = move; }
+    if (allowedRoot.includes(move) && adjusted > bestScore) { bestScore = adjusted; bestMove = move; }
   }
 
   function search(s, depth, alpha, beta, ply, preferred = -1) {
@@ -288,6 +337,7 @@ export function decide(state, options = {}) {
     if (nodes >= nodeLimit) throw STOP;
     const occupied = occupancy(s);
     const choices = s.snakes.map((snake, i) => orderMoves(s, i, occupied, i === 0 ? preferred : -1));
+    if (ply === 0) choices[0] = choices[0].filter(move => allowedRoot.includes(move));
     const joint = new Array(s.snakes.length).fill(0);
     let best = -Infinity, selected = choices[0][0];
     for (const move of choices[0]) {
