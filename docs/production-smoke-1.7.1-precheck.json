@@ -1,0 +1,7 @@
+{
+  "version": "1.7.1",
+  "observedFailures": 1,
+  "error": "TimeoutError at client AbortSignal.timeout(500)",
+  "requestIndex": null,
+  "note": "Earlier ad-hoc checker stopped at the first timeout and did not persist intermediate rows. A complete structured check is recorded separately. This failure is retained."
+}

@@ -1,0 +1,29 @@
+{
+  "games": 64,
+  "seed": 36100000,
+  "weights": {
+    "foodProgress": 8
+  },
+  "mode": "duel",
+  "opponent": "legacy",
+  "nodes": 512,
+  "wins": 41,
+  "losses": 23,
+  "draws": 0,
+  "turns": 15757,
+  "calls": 15757,
+  "maxMs": 8.073915999999999,
+  "loopTurns": 183,
+  "opponentLoopTurns": 320,
+  "firstFoodTurns": 64,
+  "opponentFirstFoodTurns": 64,
+  "finalLength": 1718,
+  "score": 0.640625,
+  "meanMs": 1.2824103034207148,
+  "loopRate": 0.011613885891984515,
+  "meanFirstFood": 1,
+  "meanFinalLength": 26.84375,
+  "opponentLoopRate": 0.02030843434663959,
+  "opponentMeanFirstFood": 1,
+  "note": "Held-out paired starts: foodProgress 8 vs frozen v1.7 foodProgress 2. Same main budget 512 and bounded extra probes."
+}

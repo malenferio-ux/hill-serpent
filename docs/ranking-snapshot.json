@@ -1,24 +1,31 @@
 {
-  "checkedAt": "2026-11-16T22:40:50.858Z",
+  "checkedAt": "2026-11-16T23:38:50.158Z",
   "ours": {
-    "rating": 22.1,
-    "rank": 43,
-    "games": 31,
-    "wins": 26,
+    "rating": 24.4,
+    "rank": 38,
+    "games": 35,
+    "wins": 30,
     "url": "https://arena.battlesnake.com/leaderboards/77212f22-20f5-4e0c-8db6-78844318a9bc/entries/ce0266e5-33d4-4d0f-93f7-950a69213005"
   },
   "novice": {
-    "rating": 23.6,
-    "rank": 38,
-    "games": 1013,
-    "wins": 516,
+    "rating": 23.7,
+    "rank": 41,
+    "games": 1017,
+    "wins": 518,
     "url": "https://arena.battlesnake.com/leaderboards/77212f22-20f5-4e0c-8db6-78844318a9bc/entries/de9648f9-2b1b-4a60-8848-fd61b904372f"
   },
   "apprentice": {
-    "rating": 29.9,
+    "rating": 30,
     "rank": 29,
-    "games": 587,
-    "wins": 281,
+    "games": 591,
+    "wins": 283,
     "url": "https://arena.battlesnake.com/leaderboards/77212f22-20f5-4e0c-8db6-78844318a9bc/entries/1c79a70a-12c9-4701-831d-e595cebbb579"
+  },
+  "global": {
+    "rank": 25,
+    "combinedRating": 112.7,
+    "leaderboards": 4,
+    "url": "https://arena.battlesnake.com/rankings",
+    "profile": "https://arena.battlesnake.com/users/malenferio-ux"
   }
 }

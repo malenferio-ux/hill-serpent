@@ -1,8 +1,8 @@
 {
-  "src/worker.mjs": "4c840fca8b634b0945a9842616d486a5b4acf94d6992f68d27c30ff917d299f9",
+  "src/worker.mjs": "e71d441e2fee424874e8d4f70ef547a52b0ece947be5fd6b2ab83f9175a85795",
   "src/game.mjs": "9f6475603a85657b12657fda84455ccfdcc90ac8930c377026744e757e133a09",
   "src/server.mjs": "3f0432772820f3043340e697bf76e818bdd3eb275907fad0ab3c38d915ada9bf",
-  "src/agent.mjs": "200f1a2c287cc9d5d9e5bb01cb53c096654bf57399c4d39562fb547d322c3389",
+  "src/agent.mjs": "316d6b54b012503d64d972891d7e605264ccd497ec2f051f56434d36aad79410",
   "test/game.test.mjs": "fbe3cc968bf13ac7d0c283900083a3cea26c23d72075099514d4184c1e4c84c6",
   "test/helpers.mjs": "55bcbceffb03809141a0165c929b95fd1f8c5cf57097725e250c536a66faf734",
   "test/agent.test.mjs": "05e15484738dc766a01d2ace11f98524ff2a58477d150224a089cb9c30805f97",
@@ -23,8 +23,9 @@
   "tools/tune.mjs": "958906235b90ca8744897d1a6253dfce421467ee62f89327c6e12f87f0be6ea0",
   "tools/local-game.mjs": "d7479d0b70b9778832d8b0c6d5ba3b5c6c5dbf02f45df8f0a8e5b36666592147",
   "tools/official-check.mjs": "e1d2f42e9b6930733feaa2ef4cee0c13032038fae3f215b3c5b151c4467ed078",
-  "tools/bench.mjs": "0d1702aec8e6290d1ccfae62353b5cfd58393eb06fc3cea27ef314d4629b7a43",
+  "tools/bench.mjs": "8167fe37d7f365332fc0baf0a17e08f6695d93b9dba21713daa492f99943ee1b",
   "tools/replay-check.mjs": "fbbea40b84abd101e34674974882678013bc89b4fdd10b2ded48a34aef714982",
+  "tools/http-check.mjs": "7e63f8cec4065fd77e5b962a94ff81239391b96512b9268f89e3f0e34fd21ce2",
   "tools/bundle.mjs": "4e297ebd1683872a5cbc4c49d55441df5875cf3d7a9275237713a85e3b0d9d18",
   "tools/release-check.mjs": "06b5d5dd1dd54570bbabddb4108f2f7f0b080ef455cf1c47d0e69d057c39f20a"
 }
