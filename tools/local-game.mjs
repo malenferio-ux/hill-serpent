@@ -31,7 +31,9 @@ export function start(seed, mode = 'duel') {
 export function perspective(state, index) {
   const snakes = [...state.snakes];
   [snakes[0], snakes[index]] = [snakes[index], snakes[0]];
-  return { ...state, snakes };
+  // Real /move requests omit eliminated snakes. Match that at each new
+  // decision while retaining the complete outer state for match outcomes.
+  return { ...state, snakes: snakes.filter(s => s.alive) };
 }
 
 function flood(state, head, occupied) {
