@@ -3,12 +3,12 @@ import { DIRECTIONS, fromRequest, occupancy, legalMoves, step } from './game.mjs
 export const DEFAULT_WEIGHTS = Object.freeze({
   territory: 1.8, length: 32, food: 6, health: 0.16,
   space: 1.2, trap: 450, mobility: 8, center: 0.35,
-  staticSafety: 0.5, territoryCap: 0, foodPotential: 0, tailRisk: 0, staticSpace: 0, staticTailSteps: 2, foodProgress: 0,
+  staticSafety: 0.5, territoryCap: 0, foodPotential: 0, tailRisk: 0, staticSpace: 0, staticTailSteps: 2, foodProgress: 0, leadTarget: 999, leadSlope: 1,
 });
 // Keep the four-player policy while improving food progress in duels.
 export const DUEL_WEIGHTS = Object.freeze({
   ...DEFAULT_WEIGHTS, length: 48, territoryCap: 0.4, foodPotential: 1, tailRisk: 1,
-  staticSpace: 0.5, staticTailSteps: 1, foodProgress: 2,
+  staticSpace: 0, staticTailSteps: 2, foodProgress: 2, leadTarget: 6, leadSlope: 0.2,
 });
 const WIN = 1_000_000, LOSS = -1_000_000, DRAW = -10_000;
 const STOP = Symbol('search budget exhausted');
@@ -39,11 +39,16 @@ export class Evaluator {
     if (!opponents && snakes.length > 1) return WIN - ply * 10;
     this.analyze(state);
     const own = this.value(state, 0);
+    let lengthAdjustment = 0;
+    if (this.duel && !state.constrictor) {
+      const diff = me.body.length - snakes[1].body.length, w = this.weights;
+      if (diff > w.leadTarget) lengthAdjustment = -w.length * (diff - w.leadTarget) * (1 - w.leadSlope);
+    }
     let enemy = -Infinity;
     for (let i = 1; i < snakes.length; i++) {
       if (snakes[i].alive) enemy = Math.max(enemy, this.value(state, i));
     }
-    return own - (enemy === -Infinity ? 0 : enemy);
+    return own - (enemy === -Infinity ? 0 : enemy) + lengthAdjustment;
   }
 
   analyze(state) {
@@ -151,7 +156,7 @@ export class Evaluator {
       score -= w.staticSafety * w.trap * trapped;
       // A shorter head cannot rely on an exit that its rival reaches first.
       // Free geometric space alone misses this interception at a corridor end.
-      const contested = maxOther >= length ? Math.max(0, length + 2 - this.areas[index]) / (length + 2) : 0;
+      const contested = Math.max(0, length + 2 - this.areas[index]) / (length + 2);
       score -= w.staticSafety * w.trap * 2 * contested;
     }
     if (!state.constrictor) {
@@ -290,9 +295,18 @@ export function decide(state, options = {}) {
   if (mine.length === 1) return { move: DIRECTIONS[mine[0]], score: 0, nodes: 0, depth: 0, fallbackScores: {}, survival: {}, forced: true };
   const evaluator = new Evaluator(state.g, state.snakes.length, options.weights);
   const opponents = state.snakes.map((s, i) => i ? legalMoves(state, i, rootOccupied) : mine);
+  // A forced immediate win takes precedence over any longer solo-space probe.
+  if (state.snakes.length === 2) {
+    const winner = mine.find(move => opponents[1].every(reply => {
+      const next = step(state, [move, reply]);
+      return next.snakes[0].alive && !next.snakes[1].alive;
+    }));
+    if (winner !== undefined) return { move: DIRECTIONS[winner], score: WIN - 10, nodes: 0, depth: 1, fallbackScores: {}, survival: {}, immediateWin: true };
+  }
   let nodes = 0, completedDepth = 0;
   let bestMove = mine[0], bestScore = LOSS;
   const scores = {}, survival = {};
+  const variations = new Map();
   const guardPenalty = new Float64Array(4);
   // A small root preference keeps shallow even-depth searches progressing
   // toward an existing meal. Measure against the SAME food set after eating.
@@ -305,7 +319,7 @@ export function decide(state, options = {}) {
       if (state.g.wrapped) { dx = Math.min(dx, state.g.width - dx); dy = Math.min(dy, state.g.height - dy); }
       return dx + dy;
     }));
-    if (foods.length) {
+    if (foods.length && (state.snakes[0].body.length - state.snakes[1].body.length < evaluator.weights.leadTarget || state.snakes[0].health < 55)) {
       const before = distance(state.snakes[0].body[0]);
       for (const move of mine) {
         const target = state.g.next[state.snakes[0].body[0] * 4 + move];
@@ -332,9 +346,11 @@ export function decide(state, options = {}) {
     }
   }
 
-  // A completed AND/OR proof can exclude a root move. If every move loses,
-  // retain all of them so the ordinary search can choose how to resist.
-  const unprovenRoot = mine.filter(move => survival[DIRECTIONS[move]]?.kind !== 'forced-replies');
+  // Prefer a move with a surviving continuation under the bounded safety
+  // model. A finite heuristic penalty could otherwise be outweighed by a
+  // pessimistic space score on the safe move. If every move is marked unsafe,
+  // keep all of them so the ordinary search can choose how to resist.
+  const unprovenRoot = mine.filter(move => !survival[DIRECTIONS[move]]?.trapped);
   const allowedRoot = unprovenRoot.length ? unprovenRoot : mine;
 
   // An always-complete fallback checks every immediate head threat, including
@@ -362,12 +378,26 @@ export function decide(state, options = {}) {
     if (!depth || terminal) return { score: evaluator.evaluate(s, ply), move: -1 };
     if (nodes >= nodeLimit) throw STOP;
     const occupied = occupancy(s);
-    const choices = s.snakes.map((snake, i) => orderMoves(s, i, occupied, i === 0 ? preferred : -1));
+    // Hash collisions affect ordering only: cached scores are never reused.
+    let key = 2166136261;
+    for (const snake of s.snakes) {
+      key = Math.imul(key ^ snake.health ^ (snake.alive ? 512 : 0), 16777619);
+      for (const cell of snake.body) key = Math.imul(key ^ (cell + 1), 16777619);
+      key = Math.imul(key ^ 65535, 16777619);
+    }
+    const previous = variations.get(key);
+    const choices = s.snakes.map((snake, i) => orderMoves(s, i, occupied,
+      i === 0 ? (preferred >= 0 ? preferred : previous?.move ?? -1) : -1));
+    const replyMoves = new Int8Array(4).fill(-1);
     if (ply === 0) choices[0] = choices[0].filter(move => allowedRoot.includes(move));
     const joint = new Array(s.snakes.length).fill(0);
     let best = -Infinity, selected = choices[0][0];
     for (const move of choices[0]) {
       joint[0] = move;
+      if (choices.length === 2 && previous?.replies[move] >= 0) {
+        const firstReply = previous.replies[move];
+        choices[1].sort((a, b) => (b === firstReply) - (a === firstReply));
+      }
       const penalty = ply === 0 ? guardPenalty[move] : 0;
       const rawBound = value => penalty && Math.abs(value) < WIN / 2 ? value + penalty : value;
       let worst = Infinity;
@@ -379,7 +409,7 @@ export function decide(state, options = {}) {
           const child = step(s, joint);
           const result = search(child, depth - 1, rawBound(alpha), rawBound(Math.min(beta, worst)), ply + 1);
           const value = penalty && Math.abs(result.score) < WIN / 2 ? result.score - penalty : result.score;
-          worst = Math.min(worst, value);
+          if (value < worst) { worst = value; replyMoves[move] = joint[1]; }
           return;
         }
         for (const reply of choices[index]) {
@@ -393,6 +423,7 @@ export function decide(state, options = {}) {
       alpha = Math.max(alpha, best);
       if (alpha >= beta) break;
     }
+    variations.set(key, { move: selected, replies: replyMoves });
     return { score: best, move: selected };
   }
 
