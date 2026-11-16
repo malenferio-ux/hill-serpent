@@ -3,17 +3,21 @@ import { DIRECTIONS, fromRequest, occupancy, legalMoves, step } from './game.mjs
 export const DEFAULT_WEIGHTS = Object.freeze({
   territory: 1.8, length: 32, food: 6, health: 0.16,
   space: 1.2, trap: 450, mobility: 8, center: 0.35,
-  staticSafety: 0.5,
+  staticSafety: 0.5, territoryCap: 0, foodPotential: 0,
+});
+// Keep the four-player policy while improving food progress in duels.
+export const DUEL_WEIGHTS = Object.freeze({
+  ...DEFAULT_WEIGHTS, length: 48, territoryCap: 0.4, foodPotential: 1,
 });
 const WIN = 1_000_000, LOSS = -1_000_000, DRAW = -10_000;
 const STOP = Symbol('search budget exhausted');
 
 // The buffers belong to one synchronous decision; requests share no game data.
 export class Evaluator {
-  constructor(g, count, weights = DEFAULT_WEIGHTS) {
+  constructor(g, count, weights = {}) {
     this.g = g;
     this.duel = count === 2;
-    this.weights = { ...DEFAULT_WEIGHTS, ...weights };
+    this.weights = { ...(this.duel ? DUEL_WEIGHTS : DEFAULT_WEIGHTS), ...weights };
     this.distances = Array.from({ length: count }, () => new Int16Array(g.size));
     this.release = new Int16Array(g.size);
     this.queue = new Int16Array(g.size);
@@ -130,7 +134,11 @@ export class Evaluator {
     // 3+ segments those two caps cancel and eating earns no length advantage.
     // With several opponents retain the more conservative growth policy.
     const effectiveLength = state.snakes.length > 2 ? Math.min(length, maxOther + 2) : length;
-    let score = w.territory * this.areas[index] + w.space * Math.min(room, length * 2.5)
+    // Once there is sufficient safe territory, progress toward food matters
+    // more than repeatedly reclaiming a few central cells.
+    const territory = this.duel && !state.constrictor && w.territoryCap > 0
+      ? Math.min(this.areas[index], Math.max(length * 2, state.g.size * w.territoryCap)) : this.areas[index];
+    let score = w.territory * territory + w.space * Math.min(room, length * 2.5)
       + (state.constrictor ? 0 : w.length * effectiveLength) - w.trap * deficit;
     if (this.duel && w.staticSafety > 0 && !state.constrictor) {
       const openRoom = this.staticSpaces[index];
@@ -146,7 +154,12 @@ export class Evaluator {
       const urgency = s.health < 30 ? 3 : s.health < 55 ? 1.8 : 1;
       score += w.health * s.health;
       if (distance < 999) {
-        score -= w.food * urgency * Math.min(distance, 20);
+        if (this.duel && w.foodPotential > 0) {
+          // A meal must not look bad simply because the next meal is far away.
+          // This bounded, nonnegative potential is smaller than growth reward.
+          const bonus = Math.min(w.length * 0.75, w.food * 4 * urgency);
+          score += bonus / (distance + 1);
+        } else score -= w.food * urgency * Math.min(distance, 20);
         if (distance >= s.health) score -= 600;
       } else if (s.health < 35) score -= (35 - s.health) * 10;
     }
