@@ -1,5 +1,5 @@
 import os from 'node:os';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import { chooseMove } from '../src/agent.mjs';
 import { toRequest, step, legalMoves } from '../src/game.mjs';
 import { start, environment, random, argumentsOf } from './local-game.mjs';
@@ -16,6 +16,10 @@ for (const mode of ['duel', 'standard', 'royale', 'constrictor']) {
   }
 }
 const rows = [];
+if (args.corpus) {
+  const corpus = JSON.parse(await readFile(args.corpus, 'utf8'));
+  for (const request of corpus) samples.push({ mode: request.game.ruleset.name, request });
+}
 for (const nodes of [128, 256, 3200]) {
   // Cold measurements precede a short warmup. All decisions run serially.
   const cold = performance.now(); chooseMove(samples[0].request, { nodes });
@@ -35,7 +39,8 @@ for (const nodes of [128, 256, 3200]) {
     maxMs: times.at(-1), cpuMsPerMove: (used.user + used.system) / 1000 / iterations });
 }
 const result = { machine: { platform: process.platform, arch: process.arch, cpu: os.cpus()[0]?.model, node: process.version },
-  singleDecisionThread: true, note: 'Local timing is not a production Cloudflare CPU measurement or network latency guarantee.', rows };
+  singleDecisionThread: true, v8Flags: process.execArgv,
+  positions: samples.length, note: 'Local timing is not a production Cloudflare CPU measurement or network latency guarantee.', rows };
 await mkdir('results', { recursive: true });
 await writeFile('results/latency.json', JSON.stringify(result, null, 2));
 console.log(JSON.stringify(result, null, 2));
