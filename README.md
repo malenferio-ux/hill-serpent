@@ -6,7 +6,11 @@
 
 **Опубликована:** [hill-serpent.pages.dev](https://hill-serpent.pages.dev).
 [Профиль на арене](https://arena.battlesnake.com/battlesnakes/353a87c8-5303-4ead-aa45-38b72b2ba12e/profile).
-Подключены Duels, Standard, Royale и Constrictor. Реальные ссылки и проверка
+Подключены Duels, Standard, Royale и Constrictor.
+
+**Версия 1.1.0:** после разбора реального поражения исправлен стимул к росту
+в дуэли и добавлена оценка коридоров, которые может перекрыть более длинный
+соперник. Проверки и сравнение с 1.0.0: [`docs/improvement-1.1.md`](docs/improvement-1.1.md). Реальные ссылки и проверка
 публикации: [`docs/publication.md`](docs/publication.md).
 
 ## Быстрый локальный запуск
