@@ -167,6 +167,7 @@ function toRequest(state, index = 0) {
 const DEFAULT_WEIGHTS = Object.freeze({
   territory: 1.8, length: 32, food: 6, health: 0.16,
   space: 1.2, trap: 450, mobility: 8, center: 0.35,
+  staticSafety: 0.5,
 });
 const WIN = 1_000_000, LOSS = -1_000_000, DRAW = -10_000;
 const STOP = Symbol('search budget exhausted');
@@ -175,6 +176,7 @@ const STOP = Symbol('search budget exhausted');
 class Evaluator {
   constructor(g, count, weights = DEFAULT_WEIGHTS) {
     this.g = g;
+    this.duel = count === 2;
     this.weights = { ...DEFAULT_WEIGHTS, ...weights };
     this.distances = Array.from({ length: count }, () => new Int16Array(g.size));
     this.release = new Int16Array(g.size);
@@ -182,6 +184,9 @@ class Evaluator {
     this.areas = new Float64Array(count);
     this.spaces = new Float64Array(count);
     this.foodDistances = new Int16Array(count);
+    this.staticSpaces = new Float64Array(count);
+    this.tailConnected = new Uint8Array(count);
+    this.seen = new Int16Array(g.size);
   }
 
   evaluate(state, ply = 0) {
@@ -205,6 +210,7 @@ class Evaluator {
     const { release, queue, distances, areas, spaces, foodDistances } = this;
     release.fill(0);
     areas.fill(0); spaces.fill(0); foodDistances.fill(999);
+    this.staticSpaces.fill(0); this.tailConnected.fill(0);
     for (const s of snakes) {
       if (!s.alive) continue;
       for (let k = 0; k < s.body.length; k++) {
@@ -231,6 +237,35 @@ class Evaluator {
           if (state.food[q]) foodDistances[i] = Math.min(foodDistances[i], d);
         }
       }
+      // Temporal flood fill is optimistic: it can count the whole board even
+      // inside a sealed corridor because every body eventually "disappears".
+      // Also measure the region with only the next two tail releases open.
+      // A connected, moving own tail is a valid escape rather than a prison.
+      if (this.duel && this.weights.staticSafety > 0 && !state.constrictor) {
+        const seen = this.seen;
+        seen.fill(0); seen[s.body[0]] = 1;
+        read = 0; end = 1; queue[0] = s.body[0];
+        let room = 1;
+        const tail = s.body[s.body.length - 1];
+        let connected = false;
+        // The heuristic only needs a certificate of enough room or an escape
+        // to our moving tail, not the size of the entire open component.
+        while (read < end && room < s.body.length + 2 && !connected) {
+          const p = queue[read++];
+          for (let m = 0; m < 4; m++) {
+            const q = g.next[p * 4 + m];
+            if (q < 0 || seen[q]) continue;
+            if (release[q] > 2 || release[q] > seen[p]) continue;
+            if (!state.food[q] && s.health <= 1 + state.hazards[q] * state.hazardDamage) continue;
+            seen[q] = seen[p] + 1; queue[end++] = q;
+            room += state.hazards[q] ? 0.25 : 1;
+            if (q === tail && q !== s.body[0]) connected = true;
+            if (connected || room >= s.body.length + 2) break;
+          }
+        }
+        this.staticSpaces[i] = room;
+        this.tailConnected[i] = connected ? 1 : 0;
+      } else this.staticSpaces[i] = spaces[i] + 1;
     }
     for (let p = 0; p < g.size; p++) {
       let owner = -1, distance = 999, length = 0;
@@ -251,12 +286,25 @@ class Evaluator {
     const deficit = Math.max(0, length + 2 - room) / (length + 2);
     let maxOther = 0;
     for (let i = 0; i < state.snakes.length; i++) {
-      if (i !== index && state.snakes[i].alive) maxOther = Math.max(maxOther, state.snakes[i].body.length);
+      if (i !== index && state.snakes[i].alive) {
+        maxOther = Math.max(maxOther, state.snakes[i].body.length);
+      }
     }
-    // Once we have a head-to-head advantage, an extra segment is less useful.
-    const effectiveLength = Math.min(length, maxOther + 2);
+    // Do not cap each snake relative to the other's length: when trailing by
+    // 3+ segments those two caps cancel and eating earns no length advantage.
+    // With several opponents retain the more conservative growth policy.
+    const effectiveLength = state.snakes.length > 2 ? Math.min(length, maxOther + 2) : length;
     let score = w.territory * this.areas[index] + w.space * Math.min(room, length * 2.5)
       + (state.constrictor ? 0 : w.length * effectiveLength) - w.trap * deficit;
+    if (this.duel && w.staticSafety > 0 && !state.constrictor) {
+      const openRoom = this.staticSpaces[index];
+      const trapped = this.tailConnected[index] ? 0 : Math.max(0, length + 2 - openRoom) / (length + 2);
+      score -= w.staticSafety * w.trap * trapped;
+      // A shorter head cannot rely on an exit that its rival reaches first.
+      // Free geometric space alone misses this interception at a corridor end.
+      const contested = maxOther >= length ? Math.max(0, length + 2 - this.areas[index]) / (length + 2) : 0;
+      score -= w.staticSafety * w.trap * 2 * contested;
+    }
     if (!state.constrictor) {
       const distance = this.foodDistances[index];
       const urgency = s.health < 30 ? 3 : s.health < 55 ? 1.8 : 1;
@@ -388,7 +436,7 @@ function decide(state, options = {}) {
 
 // worker.mjs
 
-const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.0.0' };
+const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.1.0' };
 
 async function handle(request, env = {}) {
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
