@@ -1,0 +1,666 @@
+{
+  "nodes": 256,
+  "seed": 1000,
+  "games": 8,
+  "candidates": 10,
+  "history": [
+    {
+      "candidate": 0,
+      "accepted": true,
+      "weights": {
+        "territory": 1.8,
+        "length": 32,
+        "food": 6,
+        "health": 0.16,
+        "space": 1.2,
+        "trap": 450,
+        "mobility": 8,
+        "center": 0.35
+      },
+      "score": 0.9166666666666666,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 5.994957999999999,
+          "meanMs": 0.7162261567164182,
+          "decisions": 804,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 2.3637919999999895,
+          "meanMs": 0.6909759215155613,
+          "decisions": 1478,
+          "score": 1
+        },
+        {
+          "opponent": "search",
+          "wins": 5,
+          "losses": 1,
+          "draws": 2,
+          "games": 8,
+          "maxMs": 0.8655420000000049,
+          "meanMs": 0.6898305690826764,
+          "decisions": 1766,
+          "score": 0.75
+        }
+      ]
+    },
+    {
+      "candidate": 1,
+      "changed": "center",
+      "accepted": false,
+      "weights": {
+        "territory": 1.8,
+        "length": 32,
+        "food": 6,
+        "health": 0.16,
+        "space": 1.2,
+        "trap": 450,
+        "mobility": 8,
+        "center": 0.22749999999999998
+      },
+      "score": 0.9166666666666666,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.867750000000342,
+          "meanMs": 0.6723869258400965,
+          "decisions": 863,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.9063340000002427,
+          "meanMs": 0.6798618323066348,
+          "decisions": 1461,
+          "score": 1
+        },
+        {
+          "opponent": "search",
+          "wins": 5,
+          "losses": 1,
+          "draws": 2,
+          "games": 8,
+          "maxMs": 0.8930409999993572,
+          "meanMs": 0.6918411288311633,
+          "decisions": 1925,
+          "score": 0.75
+        }
+      ]
+    },
+    {
+      "candidate": 2,
+      "changed": "territory",
+      "accepted": true,
+      "weights": {
+        "territory": 2.7,
+        "length": 32,
+        "food": 6,
+        "health": 0.16,
+        "space": 1.2,
+        "trap": 450,
+        "mobility": 8,
+        "center": 0.35
+      },
+      "score": 0.9375,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 1.1948750000001382,
+          "meanMs": 0.6694960699745455,
+          "decisions": 786,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.9961249999996653,
+          "meanMs": 0.6994812593930687,
+          "decisions": 1384,
+          "score": 1
+        },
+        {
+          "opponent": "search",
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "games": 8,
+          "maxMs": 0.9576249999990978,
+          "meanMs": 0.7029784878048853,
+          "decisions": 2091,
+          "score": 0.8125
+        }
+      ]
+    },
+    {
+      "candidate": 3,
+      "changed": "trap",
+      "accepted": false,
+      "weights": {
+        "territory": 2.7,
+        "length": 32,
+        "food": 6,
+        "health": 0.16,
+        "space": 1.2,
+        "trap": 292.5,
+        "mobility": 8,
+        "center": 0.35
+      },
+      "score": 0.9375,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.9659580000006827,
+          "meanMs": 0.6723009541984555,
+          "decisions": 786,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.9931670000005397,
+          "meanMs": 0.6947584602600761,
+          "decisions": 1384,
+          "score": 1
+        },
+        {
+          "opponent": "search",
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "games": 8,
+          "maxMs": 0.888875000000553,
+          "meanMs": 0.6961870774378877,
+          "decisions": 2092,
+          "score": 0.8125
+        }
+      ]
+    },
+    {
+      "candidate": 4,
+      "changed": "health",
+      "accepted": false,
+      "weights": {
+        "territory": 2.7,
+        "length": 32,
+        "food": 6,
+        "health": 0.10400000000000001,
+        "space": 1.2,
+        "trap": 450,
+        "mobility": 8,
+        "center": 0.35
+      },
+      "score": 0.8958333333333334,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.8722909999996773,
+          "meanMs": 0.6666371763313406,
+          "decisions": 845,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 1.0794580000001588,
+          "meanMs": 0.7403841356050428,
+          "decisions": 1438,
+          "score": 1
+        },
+        {
+          "opponent": "search",
+          "wins": 5,
+          "losses": 2,
+          "draws": 1,
+          "games": 8,
+          "maxMs": 0.8950829999994312,
+          "meanMs": 0.7005203004925863,
+          "decisions": 2233,
+          "score": 0.6875
+        }
+      ]
+    },
+    {
+      "candidate": 5,
+      "changed": "food",
+      "accepted": false,
+      "weights": {
+        "territory": 2.7,
+        "length": 32,
+        "food": 9,
+        "health": 0.16,
+        "space": 1.2,
+        "trap": 450,
+        "mobility": 8,
+        "center": 0.35
+      },
+      "score": 0.8541666666666666,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.9009999999980209,
+          "meanMs": 0.6765631219298022,
+          "decisions": 1140,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.8555410000008123,
+          "meanMs": 0.6888901304761835,
+          "decisions": 1050,
+          "score": 1
+        },
+        {
+          "opponent": "search",
+          "wins": 3,
+          "losses": 2,
+          "draws": 3,
+          "games": 8,
+          "maxMs": 0.9047500000015134,
+          "meanMs": 0.7019475799739894,
+          "decisions": 2307,
+          "score": 0.5625
+        }
+      ]
+    },
+    {
+      "candidate": 6,
+      "changed": "center",
+      "accepted": false,
+      "weights": {
+        "territory": 2.7,
+        "length": 32,
+        "food": 6,
+        "health": 0.16,
+        "space": 1.2,
+        "trap": 450,
+        "mobility": 8,
+        "center": 0.5249999999999999
+      },
+      "score": 0.9166666666666666,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.8512919999993755,
+          "meanMs": 0.6698389414758203,
+          "decisions": 786,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 1.0188749999979336,
+          "meanMs": 0.706530683526015,
+          "decisions": 1384,
+          "score": 1
+        },
+        {
+          "opponent": "search",
+          "wins": 5,
+          "losses": 1,
+          "draws": 2,
+          "games": 8,
+          "maxMs": 0.8774579999990237,
+          "meanMs": 0.6992425252403354,
+          "decisions": 2496,
+          "score": 0.75
+        }
+      ]
+    },
+    {
+      "candidate": 7,
+      "changed": "center",
+      "accepted": false,
+      "weights": {
+        "territory": 2.7,
+        "length": 32,
+        "food": 6,
+        "health": 0.16,
+        "space": 1.2,
+        "trap": 450,
+        "mobility": 8,
+        "center": 0.22749999999999998
+      },
+      "score": 0.9375,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.8566670000000158,
+          "meanMs": 0.671354330788805,
+          "decisions": 786,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.9501660000023548,
+          "meanMs": 0.7144624644194338,
+          "decisions": 1602,
+          "score": 1
+        },
+        {
+          "opponent": "search",
+          "wins": 6,
+          "losses": 1,
+          "draws": 1,
+          "games": 8,
+          "maxMs": 0.9596669999991718,
+          "meanMs": 0.7231541005222702,
+          "decisions": 2298,
+          "score": 0.8125
+        }
+      ]
+    },
+    {
+      "candidate": 8,
+      "changed": "territory",
+      "accepted": false,
+      "weights": {
+        "territory": 1.7550000000000001,
+        "length": 32,
+        "food": 6,
+        "health": 0.16,
+        "space": 1.2,
+        "trap": 450,
+        "mobility": 8,
+        "center": 0.35
+      },
+      "score": 0.9166666666666666,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.8821669999997539,
+          "meanMs": 0.6881612526071776,
+          "decisions": 863,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.8924159999987751,
+          "meanMs": 0.6925632015504514,
+          "decisions": 1419,
+          "score": 1
+        },
+        {
+          "opponent": "search",
+          "wins": 5,
+          "losses": 1,
+          "draws": 2,
+          "games": 8,
+          "maxMs": 0.9042499999995925,
+          "meanMs": 0.7048858566467465,
+          "decisions": 2016,
+          "score": 0.75
+        }
+      ]
+    },
+    {
+      "candidate": 9,
+      "changed": "mobility",
+      "accepted": true,
+      "weights": {
+        "territory": 2.7,
+        "length": 32,
+        "food": 6,
+        "health": 0.16,
+        "space": 1.2,
+        "trap": 450,
+        "mobility": 12,
+        "center": 0.35
+      },
+      "score": 0.9583333333333334,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.8302079999994021,
+          "meanMs": 0.6726881221373462,
+          "decisions": 786,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.8691659999967669,
+          "meanMs": 0.6997582860360301,
+          "decisions": 1332,
+          "score": 1
+        },
+        {
+          "opponent": "search",
+          "wins": 6,
+          "losses": 0,
+          "draws": 2,
+          "games": 8,
+          "maxMs": 0.9139999999970314,
+          "meanMs": 0.7068394193216873,
+          "decisions": 1946,
+          "score": 0.875
+        }
+      ]
+    },
+    {
+      "candidate": 10,
+      "changed": "length",
+      "accepted": false,
+      "weights": {
+        "territory": 2.7,
+        "length": 20.8,
+        "food": 6,
+        "health": 0.16,
+        "space": 1.2,
+        "trap": 450,
+        "mobility": 12,
+        "center": 0.35
+      },
+      "score": 0.8333333333333334,
+      "records": [
+        {
+          "opponent": "space",
+          "wins": 8,
+          "losses": 0,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.9205829999991693,
+          "meanMs": 0.6772796049514466,
+          "decisions": 929,
+          "score": 1
+        },
+        {
+          "opponent": "hunter",
+          "wins": 7,
+          "losses": 1,
+          "draws": 0,
+          "games": 8,
+          "maxMs": 0.8662499999991269,
+          "meanMs": 0.69469214361291,
+          "decisions": 1323,
+          "score": 0.875
+        },
+        {
+          "opponent": "search",
+          "wins": 4,
+          "losses": 2,
+          "draws": 2,
+          "games": 8,
+          "maxMs": 0.9771669999972801,
+          "meanMs": 0.7285509017005948,
+          "decisions": 2411,
+          "score": 0.625
+        }
+      ]
+    }
+  ],
+  "champion": {
+    "territory": 1.8,
+    "length": 32,
+    "food": 6,
+    "health": 0.16,
+    "space": 1.2,
+    "trap": 450,
+    "mobility": 8,
+    "center": 0.35
+  },
+  "heldoutBaseline": {
+    "score": 0.8854166666666666,
+    "records": [
+      {
+        "opponent": "space",
+        "wins": 16,
+        "losses": 0,
+        "draws": 0,
+        "games": 16,
+        "maxMs": 1.0678330000009737,
+        "meanMs": 0.6945594605011467,
+        "decisions": 1557,
+        "score": 1
+      },
+      {
+        "opponent": "hunter",
+        "wins": 16,
+        "losses": 0,
+        "draws": 0,
+        "games": 16,
+        "maxMs": 1.07316699999501,
+        "meanMs": 0.7029391162791316,
+        "decisions": 2279,
+        "score": 1
+      },
+      {
+        "opponent": "search",
+        "wins": 10,
+        "losses": 5,
+        "draws": 1,
+        "games": 16,
+        "maxMs": 2.980583000004117,
+        "meanMs": 0.7126716699078768,
+        "decisions": 3908,
+        "score": 0.65625
+      }
+    ]
+  },
+  "heldoutChampion": {
+    "score": 0.8229166666666666,
+    "records": [
+      {
+        "opponent": "space",
+        "wins": 16,
+        "losses": 0,
+        "draws": 0,
+        "games": 16,
+        "maxMs": 1.2457910000011907,
+        "meanMs": 0.6820668374302628,
+        "decisions": 1790,
+        "score": 1
+      },
+      {
+        "opponent": "hunter",
+        "wins": 15,
+        "losses": 0,
+        "draws": 1,
+        "games": 16,
+        "maxMs": 1.4203330000018468,
+        "meanMs": 0.7133915775862922,
+        "decisions": 2436,
+        "score": 0.96875
+      },
+      {
+        "opponent": "search",
+        "wins": 4,
+        "losses": 4,
+        "draws": 8,
+        "games": 16,
+        "maxMs": 2.3653750000012224,
+        "meanMs": 0.7314600134665975,
+        "decisions": 4901,
+        "score": 0.5
+      }
+    ]
+  },
+  "warning": "Local original sparring partners only; this is not an arena ranking or a test against the four course snakes.",
+  "trainingChampion": {
+    "territory": 2.7,
+    "length": 32,
+    "food": 6,
+    "health": 0.16,
+    "space": 1.2,
+    "trap": 450,
+    "mobility": 12,
+    "center": 0.35
+  },
+  "validationAccepted": false
+}

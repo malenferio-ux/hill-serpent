@@ -1,0 +1,6 @@
+{
+  "src/agent.mjs": "2cafa334395f1eea9e84e9fb7bfaadda42177a8a57d9ba8faa559da19a6b793f",
+  "src/game.mjs": "e6f33ecd24e35ed7e6a40d9965cbaacfc7cc9ee8388c2117398a0838f07d63ec",
+  "src/server.mjs": "3f0432772820f3043340e697bf76e818bdd3eb275907fad0ab3c38d915ada9bf",
+  "src/worker.mjs": "1282fe1679c6c4c28e29eea821cd7eccf27bdeaf90305c970c6b04e52f5572f7"
+}

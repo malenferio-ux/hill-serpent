@@ -1,0 +1,164 @@
+{
+  "url": "https://hill-serpent.pages.dev",
+  "details": {
+    "apiversion": "1",
+    "author": "malenferio-ux",
+    "color": "#8b5cf6",
+    "head": "default",
+    "tail": "default",
+    "version": "1.0.0"
+  },
+  "date": "2026-11-16T13:48:25.702Z",
+  "requests": 24,
+  "allValid": true,
+  "maxRoundtripMs": 173.48775,
+  "p95RoundtripMs": 79.81679200000002,
+  "meanRoundtripMs": 52.54080912499999,
+  "samples": [
+    {
+      "rule": "standard",
+      "players": 2,
+      "ms": 79.81679200000002,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 4,
+      "ms": 52.53899999999999,
+      "move": "up"
+    },
+    {
+      "rule": "royale",
+      "players": 4,
+      "ms": 50.61154200000004,
+      "move": "up"
+    },
+    {
+      "rule": "constrictor",
+      "players": 2,
+      "ms": 59.62024999999994,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 2,
+      "ms": 41.553,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 4,
+      "ms": 45.246167000000014,
+      "move": "up"
+    },
+    {
+      "rule": "royale",
+      "players": 4,
+      "ms": 39.186417000000006,
+      "move": "up"
+    },
+    {
+      "rule": "constrictor",
+      "players": 2,
+      "ms": 34.61120800000003,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 2,
+      "ms": 173.48775,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 4,
+      "ms": 37.885832999999934,
+      "move": "up"
+    },
+    {
+      "rule": "royale",
+      "players": 4,
+      "ms": 50.752832999999896,
+      "move": "up"
+    },
+    {
+      "rule": "constrictor",
+      "players": 2,
+      "ms": 50.531124999999975,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 2,
+      "ms": 34.150292000000036,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 4,
+      "ms": 51.00562500000001,
+      "move": "up"
+    },
+    {
+      "rule": "royale",
+      "players": 4,
+      "ms": 49.703583999999864,
+      "move": "up"
+    },
+    {
+      "rule": "constrictor",
+      "players": 2,
+      "ms": 50.867082999999866,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 2,
+      "ms": 36.91366700000003,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 4,
+      "ms": 51.67991700000016,
+      "move": "up"
+    },
+    {
+      "rule": "royale",
+      "players": 4,
+      "ms": 47.931542000000036,
+      "move": "up"
+    },
+    {
+      "rule": "constrictor",
+      "players": 2,
+      "ms": 34.87287500000002,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 2,
+      "ms": 41.65666600000009,
+      "move": "up"
+    },
+    {
+      "rule": "standard",
+      "players": 4,
+      "ms": 53.384833999999955,
+      "move": "up"
+    },
+    {
+      "rule": "royale",
+      "players": 4,
+      "ms": 56.60504200000014,
+      "move": "up"
+    },
+    {
+      "rule": "constrictor",
+      "players": 2,
+      "ms": 36.366374999999834,
+      "move": "up"
+    }
+  ],
+  "note": "Public HTTP round trips from this computer; arena latency is checked separately."
+}

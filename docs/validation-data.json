@@ -1,0 +1,210 @@
+{
+  "date": "2026-11-16",
+  "reports": {
+    "latency": {
+      "machine": {
+        "platform": "darwin",
+        "arch": "arm64",
+        "cpu": "Apple M4 Pro",
+        "node": "v26.12.0"
+      },
+      "singleDecisionThread": true,
+      "note": "Local timing is not a production Cloudflare CPU measurement or network latency guarantee.",
+      "rows": [
+        {
+          "nodes": 128,
+          "samples": 300,
+          "coldMs": 6.302290999999997,
+          "meanMs": 0.5518045333333336,
+          "p50Ms": 0.35420899999999733,
+          "p95Ms": 1.265749999999997,
+          "maxMs": 9.409040999999995,
+          "cpuMsPerMove": 0.5539233333333333
+        },
+        {
+          "nodes": 256,
+          "samples": 300,
+          "coldMs": 0.6702910000000202,
+          "meanMs": 0.6792409533333351,
+          "p50Ms": 0.6433339999999816,
+          "p95Ms": 1.4744999999999777,
+          "maxMs": 7.964458000000036,
+          "cpuMsPerMove": 0.68063
+        },
+        {
+          "nodes": 3200,
+          "samples": 300,
+          "coldMs": 8.290083999999979,
+          "meanMs": 7.325316579999991,
+          "p50Ms": 7.653124999999818,
+          "p95Ms": 17.69916699999999,
+          "maxMs": 18.468249999999898,
+          "cpuMsPerMove": 7.331916666666666
+        }
+      ],
+      "v8Flags": [
+        "--single-threaded",
+        "--single-threaded-gc"
+      ]
+    },
+    "final-duels": {
+      "options": {
+        "games": 40,
+        "seed": 900000,
+        "opponent": "search",
+        "mode": "duel",
+        "nodes": 3200,
+        "maxTurns": 500,
+        "opponentNodes": 256
+      },
+      "wins": 31,
+      "losses": 7,
+      "draws": 2,
+      "games": 40,
+      "maxMs": 12.818207999999998,
+      "meanMs": 7.593318791031258,
+      "decisions": 12131,
+      "score": 0.8
+    },
+    "multiplayer-256": {
+      "options": {
+        "games": 40,
+        "seed": 80000,
+        "opponent": "hunter",
+        "mode": "standard",
+        "nodes": 256,
+        "maxTurns": 500,
+        "opponentNodes": 128
+      },
+      "wins": 19,
+      "losses": 21,
+      "draws": 0,
+      "games": 40,
+      "maxMs": 4.992667000000004,
+      "meanMs": 1.1521575658429741,
+      "decisions": 6394,
+      "score": 0.475
+    },
+    "multiplayer-3200": {
+      "options": {
+        "games": 20,
+        "seed": 80000,
+        "opponent": "hunter",
+        "mode": "standard",
+        "nodes": 3200,
+        "maxTurns": 500,
+        "opponentNodes": 128
+      },
+      "wins": 14,
+      "losses": 5,
+      "draws": 1,
+      "games": 20,
+      "maxMs": 25.29733300000001,
+      "meanMs": 13.637667061152113,
+      "decisions": 3663,
+      "score": 0.725
+    },
+    "royale-3200": {
+      "options": {
+        "games": 20,
+        "seed": 81000,
+        "opponent": "hunter",
+        "mode": "royale",
+        "nodes": 3200,
+        "maxTurns": 500,
+        "opponentNodes": 128
+      },
+      "wins": 12,
+      "losses": 8,
+      "draws": 0,
+      "games": 20,
+      "maxMs": 22.896707999999997,
+      "meanMs": 14.259685512031574,
+      "decisions": 2535,
+      "score": 0.6
+    },
+    "constrictor-256": {
+      "options": {
+        "games": 40,
+        "seed": 82000,
+        "opponent": "space",
+        "mode": "constrictor",
+        "nodes": 256,
+        "maxTurns": 500,
+        "opponentNodes": 128
+      },
+      "wins": 39,
+      "losses": 0,
+      "draws": 1,
+      "games": 40,
+      "maxMs": 3.263458,
+      "meanMs": 0.424394275078369,
+      "decisions": 1276,
+      "score": 0.9875
+    },
+    "worker-smoke": {
+      "runtime": "Cloudflare workerd local",
+      "rootStatus": 200,
+      "requests": 20,
+      "moves": [
+        "up"
+      ],
+      "meanRoundtripMs": 2.9201311999999993,
+      "maxRoundtripMs": 7.729084,
+      "note": "Local smoke test; not a production CPU measurement."
+    },
+    "official-standard-2p": {
+      "engine": "Official Battlesnake CLI v1.2.3",
+      "mode": "standard",
+      "players": 2,
+      "nodes": 256,
+      "opponent": "space",
+      "games": 4,
+      "wins": 4,
+      "losses": 0,
+      "draws": 0,
+      "comparedTurns": 662,
+      "mismatches": []
+    },
+    "official-standard-4p": {
+      "engine": "Official Battlesnake CLI v1.2.3",
+      "mode": "standard",
+      "players": 4,
+      "nodes": 256,
+      "opponent": "hunter",
+      "games": 4,
+      "wins": 3,
+      "losses": 1,
+      "draws": 0,
+      "comparedTurns": 653,
+      "mismatches": []
+    },
+    "official-royale": {
+      "engine": "Official Battlesnake CLI v1.2.3",
+      "mode": "royale",
+      "nodes": 256,
+      "opponent": "hunter",
+      "games": 4,
+      "wins": 4,
+      "losses": 0,
+      "draws": 0,
+      "comparedTurns": 590,
+      "mismatches": []
+    },
+    "official-constrictor": {
+      "engine": "Official Battlesnake CLI v1.2.3",
+      "mode": "constrictor",
+      "nodes": 256,
+      "opponent": "space",
+      "games": 4,
+      "wins": 4,
+      "losses": 0,
+      "draws": 0,
+      "comparedTurns": 103,
+      "mismatches": []
+    }
+  },
+  "courseBenchmarksTested": false,
+  "arenaPublished": false,
+  "githubPublished": false
+}
