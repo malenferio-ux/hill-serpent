@@ -23,7 +23,9 @@ if (args.corpus) {
   const corpus = JSON.parse((args.corpus.endsWith('.gz') ? gunzipSync(raw) : raw).toString('utf8'));
   for (const request of corpus) samples.push({ mode: request.game.ruleset.name, request });
 }
-for (const nodes of [128, 256, 512, 1024, 3200]) {
+const budgets = String(args.budgets ?? '128,256,512,1024,3200,6400').split(',').map(Number);
+if (budgets.some(n => !Number.isFinite(n) || n < 64)) throw new Error('Invalid --budgets list');
+for (const nodes of budgets) {
   // Cold measurements precede a short warmup. All decisions run serially.
   const cold = performance.now(); chooseMove(samples[0].request, { nodes });
   const coldMs = performance.now() - cold;
