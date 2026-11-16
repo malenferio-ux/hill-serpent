@@ -1,6 +1,6 @@
 {
-  "src/agent.mjs": "8dd92e23132213699af93c03218c0d2afd2f8470118e3e8a20de1d93e157557d",
+  "src/agent.mjs": "b780c9a71cfa4eef934856a57d34ca2d9dbede518dac32cea590d67ca32dbd25",
   "src/game.mjs": "e6f33ecd24e35ed7e6a40d9965cbaacfc7cc9ee8388c2117398a0838f07d63ec",
   "src/server.mjs": "3f0432772820f3043340e697bf76e818bdd3eb275907fad0ab3c38d915ada9bf",
-  "src/worker.mjs": "955c43d73788f64078d408f9f0835581b2ddd009b03cd823c42e2062dedb1899"
+  "src/worker.mjs": "0cb4b07a5c098bb42f225ba588d8ad4b082c62bf4fc71cad75c3bd455ada46eb"
 }

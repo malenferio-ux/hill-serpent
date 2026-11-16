@@ -1,0 +1,19 @@
+{
+  "game": "https://arena.battlesnake.com/games/bc7254a2-45d8-46d6-a739-73550d354236",
+  "version": "1.2.0",
+  "result": "win",
+  "turns": 91,
+  "ourLength": 13,
+  "opponentLength": 11,
+  "opponentDeath": "head-collision",
+  "ourHealth": 97,
+  "firstFoodTurn": 2,
+  "loopTurns": 2,
+  "loopRate": 0.02197802197802198,
+  "replayedMoves": 91,
+  "mismatches": [],
+  "p50Ms": 28,
+  "p95Ms": 75,
+  "maxMs": 161,
+  "errors": []
+}

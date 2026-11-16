@@ -1,0 +1,14 @@
+{
+  "game": "https://arena.battlesnake.com/games/988f3552-592f-4c43-8751-cf2d451ae503",
+  "version": "1.1.0",
+  "turns": 384,
+  "result": "win",
+  "ourLength": 30,
+  "opponentLength": 27,
+  "opponentDeath": "self-collision",
+  "moveSamples": 384,
+  "p50Ms": 22.0,
+  "p95Ms": 46.0,
+  "maxMs": 242.0,
+  "errors": []
+}
