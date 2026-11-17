@@ -5,6 +5,7 @@ workers_dev = true
 
 [vars]
 SEARCH_NODES = "256"
+DUEL_SEARCH_NODES = "384"
 SNAKE_AUTHOR = "malenferio-ux"
 
 [observability]

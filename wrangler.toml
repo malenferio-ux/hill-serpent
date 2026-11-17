@@ -4,5 +4,6 @@ compatibility_date = "2026-11-16"
 
 [vars]
 SEARCH_NODES = "256"
+DUEL_SEARCH_NODES = "384"
 SNAKE_AUTHOR = "malenferio-ux"
 
