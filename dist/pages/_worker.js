@@ -585,8 +585,10 @@ function decide(state, options = {}) {
 
   function search(s, depth, alpha, beta, ply, preferred = -1, extensions = 0) {
     const terminal = !s.snakes[0].alive || (s.snakes.length > 1 && !s.snakes.slice(1).some(x => x.alive));
+    // Both players can enter a forced corridor beyond the ordinary horizon.
+    // Every extension still consumes the same fixed work budget.
     if (!depth && !terminal && s.snakes.length === 2 && extensions < (options.forcedExtension ?? 2)) {
-      if (legalMoves(s, 0).length === 1) { depth = 1; extensions++; }
+      if (legalMoves(s, 0).length === 1 || legalMoves(s, 1).length === 1) { depth = 1; extensions++; }
     }
     if (!depth || terminal) return { score: evaluator.evaluate(s, ply), move: -1 };
     if (nodes >= nodeLimit) throw STOP;
@@ -657,7 +659,7 @@ function decide(state, options = {}) {
 
 // worker.mjs
 
-const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.9.1' };
+const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.9.2' };
 
 async function handle(request, env = {}) {
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
