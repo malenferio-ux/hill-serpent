@@ -91,7 +91,9 @@ Cloudflare за последние 30 минут показал 3605 успеш�
 
 ```sh
 npm test
-node tools/replay-check.mjs --games docs/expert-1.9.2.json --nodes 384
+git clone https://github.com/malenferio-ux/hill-serpent /tmp/hill-serpent-1.9.2
+git -C /tmp/hill-serpent-1.9.2 checkout 0f8635b731ffbd5a8fba84095cd6ef12d48f184c
+node tools/replay-check.mjs --games docs/expert-1.9.2.json --nodes 384 --baseline-dir /tmp/hill-serpent-1.9.2
 # Воспроизведение локального сравнения с 1.9.1:
 git clone https://github.com/malenferio-ux/hill-serpent /tmp/hill-serpent-1.9.1
 git -C /tmp/hill-serpent-1.9.1 checkout 6e3bc886f7f7f91cc93d1d19ee6209878b3cf1a0

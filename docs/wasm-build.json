@@ -1,0 +1,9 @@
+{
+  "compiler": "WASI SDK 34.0",
+  "source": "src/duel.c",
+  "sourceSha256": "b4c505ca0094344cbc819b748829147213fa460b3917f97cc4f0a91450906b68",
+  "binary": "src/duel.wasm",
+  "binarySha256": "579d35b5eca0a4b1e942fc26a113c0b827576a799d511e42a61212f70ade5b91",
+  "sdkMacArm64Sha256": "9c59398106b417f8f14913380fdf0097a8cc0ff4af9eb3ce0065a859e88d49e9",
+  "command": "WASI_SDK_PATH=/absolute/path/to/wasi-sdk-34.0-arm64-macos sh tools/build-wasm.sh"
+}

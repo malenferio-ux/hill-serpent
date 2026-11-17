@@ -1,0 +1,9 @@
+{
+  "evalCount": 874,
+  "steps": 4938,
+  "searches": 438,
+  "maxError": 2.2737367544323206e-13,
+  "mismatches": [],
+  "wasmMs": 184.239005,
+  "jsMs": 562.9357519999999
+}
