@@ -379,7 +379,7 @@ export function decide(state, options = {}) {
       const edge = Math.min(x, y, state.g.width - 1 - x, state.g.height - 1 - y);
       const gap = Math.abs(ownHead % state.g.width - otherHead % state.g.width) + Math.abs((ownHead / state.g.width | 0) - (otherHead / state.g.width | 0));
       if (options.replyGuard !== false && !probe.trapped && (gap <= 5 || (edge <= 2 && gap <= 10))) {
-        const joint = probeReplies(state, move, 20, Math.max(64, Math.min(512, Number(options.replyNodes) || 256)));
+        const joint = probeReplies(state, move, 20, Math.max(64, Math.min(512, Number(options.replyNodes) || 192)));
         probe.soloNodes = probe.nodes; probe.replyNodes = joint.nodes;
         probe.replyExhausted = joint.exhausted; probe.replyDepth = joint.deepest;
         probe.nodes += joint.nodes;
@@ -417,8 +417,11 @@ export function decide(state, options = {}) {
 
   if (allowedRoot.length === 1) return { move: DIRECTIONS[allowedRoot[0]], score: bestScore, nodes: 0, depth: 0, fallbackScores: scores, survival, forced: true };
 
-  function search(s, depth, alpha, beta, ply, preferred = -1) {
+  function search(s, depth, alpha, beta, ply, preferred = -1, extensions = 0) {
     const terminal = !s.snakes[0].alive || (s.snakes.length > 1 && !s.snakes.slice(1).some(x => x.alive));
+    if (!depth && !terminal && s.snakes.length === 2 && extensions < (options.forcedExtension ?? 2)) {
+      if (legalMoves(s, 0).length === 1) { depth = 1; extensions++; }
+    }
     if (!depth || terminal) return { score: evaluator.evaluate(s, ply), move: -1 };
     if (nodes >= nodeLimit) throw STOP;
     const occupied = occupancy(s);
@@ -453,7 +456,7 @@ export function decide(state, options = {}) {
           if (nodes >= nodeLimit) throw STOP;
           nodes++;
           const child = step(s, joint);
-          const result = search(child, depth - 1, rawBound(alpha), rawBound(Math.min(beta, worst)), ply + 1);
+          const result = search(child, depth - 1, rawBound(alpha), rawBound(Math.min(beta, worst)), ply + 1, -1, extensions);
           const value = penalty && Math.abs(result.score) < WIN / 2 ? result.score - penalty : result.score;
           if (value < worst) { worst = value; replyMoves[move] = joint[1]; }
           return;

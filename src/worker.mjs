@@ -1,6 +1,6 @@
 import { chooseMove } from './agent.mjs';
 
-export const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.8.0' };
+export const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.9.0' };
 
 export async function handle(request, env = {}) {
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
@@ -20,7 +20,7 @@ export async function handle(request, env = {}) {
     // Fixed work is essential: deployed Workers freeze timers during CPU work.
     const baseNodes = Number(env.SEARCH_NODES) || 256;
     const duel = payload.board?.snakes?.length === 2 && payload.game?.ruleset?.name !== 'constrictor';
-    const result = chooseMove(payload, { nodes: duel ? baseNodes * 2 : baseNodes, depth: 7 });
+    const result = chooseMove(payload, { nodes: duel ? (Number(env.DUEL_SEARCH_NODES) || baseNodes * 2) : baseNodes, depth: 7 });
     return json({ move: result.move });
   } catch (error) {
     console.error('move failed:', error.message);
