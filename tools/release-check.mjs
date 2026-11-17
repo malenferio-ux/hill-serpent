@@ -37,7 +37,10 @@ async function series({games=16,seed=4100000,weights={},mode='duel',opponent='le
 }
 const engine=args.engine==='wasm'?(await import('../src/duel-node.mjs')).duelEngine:null;
 const workBudget=Number(args['work-budget']??1000000);
-const result=await series({...(engine?{challengerFn:(s,o)=>challenger(s,{...o,depth:12,workBudget,searchEngine:engine.search,survivalEngine:engine.guards})}:{}),games:Number(args.games??64),seed:Number(args.seed??15100000),nodes:Number(args.nodes??256),opponentNodes:Number(args['baseline-nodes']??args.nodes??256),mode:args.mode??'duel',opponent:args.opponent??'legacy'});
+const baselineEngine=args['baseline-engine']==='wasm'?(await import(pathToFileURL(resolve(args['baseline-dir'],'src/duel-node.mjs')))).duelEngine:null;
+const baselineWorkBudget=Number(args['baseline-work-budget']??1000000);
+const result=await series({...(baselineEngine?{opponentFn:(s,o)=>legacy(s,{...o,depth:12,workBudget:baselineWorkBudget,searchEngine:baselineEngine.search,survivalEngine:baselineEngine.guards})}:{}),...(engine?{challengerFn:(s,o)=>challenger(s,{...o,depth:12,workBudget,searchEngine:engine.search,survivalEngine:engine.guards})}:{}),games:Number(args.games??64),seed:Number(args.seed??15100000),nodes:Number(args.nodes??256),opponentNodes:Number(args['baseline-nodes']??args.nodes??256),mode:args.mode??'duel',opponent:args.opponent??'legacy'});
+result.baselineEngine=baselineEngine?'wasm':'js';result.baselineWorkBudget=baselineEngine?baselineWorkBudget:0;
 result.engine=engine?'wasm':'js';result.workBudget=engine?workBudget:0;
 result.note='Local comparison with supplied baseline, reported main-search node limits and paired swapped starts; the current agent may also use bounded survival and opponent-reply probes. Loop = same head cell within 4–12 turns without growth.';
 await mkdir('results',{recursive:true});
