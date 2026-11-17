@@ -165,6 +165,26 @@ function toRequest(state, index = 0) {
   };
 }
 
+// space.mjs
+// Upper bound on a simple route in the current free-cell graph. Every
+// articulation can be used only once; separate branches cannot be added.
+function routeSpace(state,index=0){
+ const {g,snakes}=state,head=snakes[index].body[0],blocked=new Uint8Array(g.size);
+ for(const s of snakes)if(s.alive)for(let k=0;k<s.body.length-1;k++)blocked[s.body[k]]=1;
+ blocked[head]=0;
+ const disc=new Int16Array(g.size),low=new Int16Array(g.size),edges=[],blocks=[],membership=Array.from({length:g.size},()=>[]);let time=0;
+ function visit(p,parent){disc[p]=low[p]=++time;
+  for(let m=0;m<4;m++){const q=g.next[p*4+m];if(q<0||blocked[q]||q===parent)continue;
+   if(!disc[q]){edges.push([p,q]);visit(q,p);low[p]=Math.min(low[p],low[q]);
+    if(low[q]>=disc[p]){const cells=new Set();let edge;do{edge=edges.pop();cells.add(edge[0]);cells.add(edge[1]);}while(edge[0]!==p||edge[1]!==q);const id=blocks.length;blocks.push([...cells]);for(const c of cells)membership[c].push(id);}
+   }else if(disc[q]<disc[p]){low[p]=Math.min(low[p],disc[q]);edges.push([p,q]);}
+  }
+ }
+ visit(head,-1);
+ function beyond(p,parentBlock){let best=0;for(const id of membership[p])if(id!==parentBlock){let branch=0;for(const q of blocks[id])if(q!==p)branch=Math.max(branch,beyond(q,id));best=Math.max(best,blocks[id].length-1+branch);}return best;}
+ return{room:time,route:1+beyond(head,-1)};
+}
+
 // duel-engine.mjs
 function makeEngine(module){
  const instance=module instanceof WebAssembly.Instance?module:new WebAssembly.Instance(module,{}),e=instance.exports;
@@ -640,6 +660,19 @@ function decide(state, options = {}) {
     }
   }
 
+  // Static room can span several branches behind the same articulation.
+  // This is a bounded preference, not a proof: future tail moves can open exits.
+  const branchPenalty = options.branchPenalty ?? 256;
+  if(branchPenalty > 0 && !state.g.wrapped && !state.royale && !state.hazards.some(Boolean) && state.snakes.length===2 && state.snakes[0].body.length<=state.snakes[1].body.length && !state.constrictor && state.snakes[0].body.length>=12){
+    const target=state.snakes[0].body.length+2;
+    for(const move of mine){let worst=0;
+      for(const reply of opponents[1]){const next=step(state,[move,reply]);if(!next.snakes[0].alive||!next.snakes[1].alive)continue;
+        const space=routeSpace(next);if(space.room>=target)worst=Math.max(worst,Math.max(0,target-space.route)/target);
+      }
+      guardPenalty[move]+=Math.round(branchPenalty*worst);
+    }
+  }
+
   // Prefer a move with a surviving continuation under the bounded safety
   // model. A finite heuristic penalty could otherwise be outweighed by a
   // pessimistic space score on the safe move. If every move is marked unsafe,
@@ -746,7 +779,7 @@ function decide(state, options = {}) {
 
 // worker.mjs
 
-const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.11.0' };
+const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.12.0' };
 
 async function handle(request, env = {}, engine = null) {
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
