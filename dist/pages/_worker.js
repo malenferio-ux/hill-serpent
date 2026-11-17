@@ -1,3 +1,4 @@
+import compiledDuel from './duel.wasm';
 // game.mjs
 // Our simulator follows the published rules, not another snake's implementation.
 // Food spawning and future Royale shrinks are deliberately outside the search.
@@ -162,6 +163,21 @@ function toRequest(state, index = 0) {
     },
     you: snakes.find(s => s.id === state.snakes[index].id),
   };
+}
+
+// duel-engine.mjs
+function makeEngine(module){
+ const instance=module instanceof WebAssembly.Instance?module:new WebAssembly.Instance(module,{}),e=instance.exports;
+ const mem=new Int32Array(e.memory.buffer),ptr=e.input()/4,out=e.output()/4;
+ function load(s,{nodeLimit=384,maxDepth=7,allowedRoot=[0,1,2,3],guardPenalty=[0,0,0,0],bestMove=0,forcedExtension=2,workBudget=0,replyGuard=true,replyNodes=192}={}){
+  mem[ptr]=s.g.width;mem[ptr+1]=s.g.height;mem[ptr+2]=nodeLimit;mem[ptr+3]=maxDepth;mem[ptr+4]=allowedRoot.reduce((x,m)=>x|1<<m,0);mem[ptr+5]=forcedExtension;mem[ptr+6]=bestMove;mem[ptr+7]=workBudget;mem[ptr+20]=replyGuard?1:0;mem[ptr+21]=replyNodes;
+  for(let i=0;i<2;i++){mem[ptr+8+i*2]=s.snakes[i].body.length;mem[ptr+9+i*2]=s.snakes[i].health;mem.set(s.snakes[i].body,ptr+672+i*672);}
+  for(let m=0;m<4;m++)mem[ptr+16+m]=Math.round(guardPenalty[m]*1000);
+  mem.set(s.food,ptr+32);
+ }
+ const search=(s,opts)=>{load(s,opts);const m=e.run();if(m<0)throw Error('Invalid engine input');return{move:['up','down','left','right'][m],score:e.score(),nodes:mem[out+1],depth:mem[out+2],work:mem[out+3],engine:'wasm'};};
+ const guards=(s,opts={})=>{load(s,opts);if(e.guards()<0)throw Error('Invalid guard input');const r={};for(let m=0;m<4;m++){const p=out+m*8,probe={trapped:!!mem[p],nodes:mem[p+1],deepest:mem[p+2]};if(mem[p+7]){probe.soloNodes=probe.nodes;probe.replyNodes=mem[p+3];probe.replyExhausted=!!mem[p+5];probe.replyDepth=mem[p+4];probe.nodes+=probe.replyNodes;if(mem[p+6]){probe.trapped=true;probe.deepest=probe.replyDepth;probe.kind='forced-replies';}}r[['up','down','left','right'][m]]=probe;}return r;};
+ return{search,guards,load,e,mem,ptr, evaluate(s){load(s,{nodeLimit:1,maxDepth:1});return e.evaluate();},transition(s,mm){load(s,{nodeLimit:1,maxDepth:1});e.run();e.transition(...mm);return{food:Array.from(mem.slice(ptr+32,ptr+32+s.g.size)),snakes:s.snakes.map((x,i)=>({len:mem[ptr+8+i*2],health:mem[ptr+9+i*2],alive:!!mem[ptr+12+i],body:Array.from(mem.slice(ptr+672+i*672,ptr+672+i*672+mem[ptr+8+i*2]))}))};}};
 }
 
 // agent.mjs
@@ -559,6 +575,7 @@ function chooseMove(request, options = {}) {
 function decide(state, options = {}) {
   const nodeLimit = Math.max(64, Math.min(40_000, Number(options.nodes) || 3200));
   const maxDepth = Math.max(1, Math.min(12, Number(options.depth) || 7));
+  const accelerated = options.searchEngine && (!options.weights || !Object.keys(options.weights).length) && state.snakes.length===2 && !state.constrictor && !state.royale && !state.g.wrapped && !state.hazards.some(Boolean);
   const rootOccupied = occupancy(state);
   const mine = legalMoves(state, 0, rootOccupied);
   if (mine.length === 1) return { move: DIRECTIONS[mine[0]], score: 0, nodes: 0, depth: 0, fallbackScores: {}, survival: {}, forced: true };
@@ -604,13 +621,14 @@ function decide(state, options = {}) {
     }
   }
   if (options.soloGuard !== false && state.snakes.length === 2 && !state.constrictor) {
+    const native = accelerated ? options.survivalEngine?.(state,options) : null;
     for (const move of mine) {
-      const probe = probeSurvival(state, move, Math.min(64, Math.max(20, state.snakes[0].body.length + 8)), 256);
+      const probe = native?.[DIRECTIONS[move]] ?? probeSurvival(state, move, Math.min(64, Math.max(20, state.snakes[0].body.length + 8)), 256);
       const ownHead = state.snakes[0].body[0], otherHead = state.snakes[1].body[0], target = state.g.next[ownHead * 4 + move];
       const x = target % state.g.width, y = target / state.g.width | 0;
       const edge = Math.min(x, y, state.g.width - 1 - x, state.g.height - 1 - y);
       const gap = Math.abs(ownHead % state.g.width - otherHead % state.g.width) + Math.abs((ownHead / state.g.width | 0) - (otherHead / state.g.width | 0));
-      if (options.replyGuard !== false && !probe.trapped && (gap <= 5 || (edge <= 2 && gap <= 10))) {
+      if (!native && options.replyGuard !== false && !probe.trapped && (gap <= 5 || (edge <= 2 && gap <= 10))) {
         const joint = probeReplies(state, move, 20, Math.max(64, Math.min(512, Number(options.replyNodes) || 192)));
         probe.soloNodes = probe.nodes; probe.replyNodes = joint.nodes;
         probe.replyExhausted = joint.exhausted; probe.replyDepth = joint.deepest;
@@ -648,6 +666,9 @@ function decide(state, options = {}) {
   }
 
   if (allowedRoot.length === 1) return { move: DIRECTIONS[allowedRoot[0]], score: bestScore, nodes: 0, depth: 0, fallbackScores: scores, survival, forced: true };
+
+  if(accelerated)
+    return {...options.searchEngine(state,{nodeLimit,maxDepth,allowedRoot,guardPenalty,bestMove,forcedExtension:options.forcedExtension??2,workBudget:options.workBudget??0}),fallbackScores:scores,survival};
 
   function search(s, depth, alpha, beta, ply, preferred = -1, extensions = 0) {
     const terminal = !s.snakes[0].alive || (s.snakes.length > 1 && !s.snakes.slice(1).some(x => x.alive));
@@ -725,9 +746,9 @@ function decide(state, options = {}) {
 
 // worker.mjs
 
-const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.10.0' };
+const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.11.0' };
 
-async function handle(request, env = {}) {
+async function handle(request, env = {}, engine = null) {
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
   const headers = { 'content-type': 'application/json', 'cache-control': 'no-store' };
   const json = (body, status = 200) => new Response(JSON.stringify(body), { status, headers });
@@ -745,7 +766,12 @@ async function handle(request, env = {}) {
     // Fixed work is essential: deployed Workers freeze timers during CPU work.
     const baseNodes = Number(env.SEARCH_NODES) || 256;
     const duel = payload.board?.snakes?.length === 2 && payload.game?.ruleset?.name !== 'constrictor';
-    const result = chooseMove(payload, { nodes: duel ? (Number(env.DUEL_SEARCH_NODES) || baseNodes * 2) : baseNodes, depth: 7 });
+    const accelerated = engine && duel && (payload.game?.ruleset?.name ?? 'standard') === 'standard' && !(payload.board?.hazards?.length);
+    const workBudget = accelerated ? Number(env.DUEL_WORK_BUDGET) || 1_000_000 : 0;
+    const nodes = accelerated ? (Number(env.DUEL_SEARCH_NODES) || 40_000)
+      : duel ? (Number(env.JS_DUEL_SEARCH_NODES) || Number(env.DUEL_SEARCH_NODES) || baseNodes * 2) : baseNodes;
+    const result = chooseMove(payload, { nodes, depth: accelerated ? 12 : 7, workBudget,
+      ...(accelerated ? { searchEngine: engine.search, survivalEngine: engine.guards } : {}) });
     return json({ move: result.move });
   } catch (error) {
     console.error('move failed:', error.message);
@@ -753,4 +779,6 @@ async function handle(request, env = {}) {
   }
 }
 
-export default { fetch: handle };
+
+const duelEngine = makeEngine(compiledDuel);
+export default { fetch: (request, env) => handle(request, env, duelEngine) };
