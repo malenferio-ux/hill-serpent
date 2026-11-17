@@ -62,7 +62,7 @@ test('cached move ordering agrees with exhaustive simultaneous minimax', () => {
       return { move: DIRECTIONS[a], score: worst };
     });
     const best = Math.max(...values.map(x => x.score));
-    const actual = chooseMove(request, { nodes: 40000, depth: 3, soloGuard: false, weights: { foodProgress: 0 } });
+    const actual = chooseMove(request, { nodes: 40000, depth: 3, forcedExtension: 0, soloGuard: false, weights: { foodProgress: 0 } });
     assert.ok(Math.abs(actual.score - best) < 1e-7);
     assert.ok(values.some(x => x.move === actual.move && Math.abs(x.score - best) < 1e-7));
   }
@@ -76,4 +76,25 @@ test('equal-length enemy blocks the shared passage; a longer head can contest it
   a.analyze(equal); b.analyze(longer);
   assert.equal(a.connectedSpace, 3);
   assert.ok(b.connectedSpace > a.connectedSpace);
+});
+
+test('forced-path extension agrees with a full unpruned tree and honors its node limit', () => {
+  const request = fixture({ width: 5, height: 5, bodies: [[6,5,0,1], [18,19,24,23]], food: [12,8] });
+  const state = fromRequest(request), evaluator = new Evaluator(state.g, 2, {foodProgress:0});
+  let extensionsUsed = 0;
+  function oracle(s, depth, ply, extensions) {
+    if (!s.snakes[0].alive || !s.snakes[1].alive) return evaluator.evaluate(s, ply);
+    const moves = legalMoves(s,0);
+    if (!depth && moves.length === 1 && extensions < 2) { depth=1; extensions++; extensionsUsed++; }
+    if (!depth) return evaluator.evaluate(s,ply);
+    return Math.max(...moves.map(a=>Math.min(...legalMoves(s,1).map(b=>oracle(step(s,[a,b]),depth-1,ply+1,extensions)))));
+  }
+  const expected = oracle(state,3,0,0);
+  const result = chooseMove(request,{nodes:40000,depth:3,soloGuard:false,weights:{foodProgress:0}});
+  assert.ok(extensionsUsed > 0);
+  assert.ok(Math.abs(result.score-expected)<1e-7);
+  assert.equal(result.depth,3);
+  const bounded=chooseMove(request,{nodes:384});
+  assert.ok(bounded.nodes<=384);
+  assert.deepEqual(request,fixture({ width:5,height:5,bodies:[[6,5,0,1],[18,19,24,23]],food:[12,8]}));
 });
