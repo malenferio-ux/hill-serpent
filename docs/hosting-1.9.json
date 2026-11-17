@@ -1,0 +1,14 @@
+{
+  "checkedAt": "2026-11-17T11:13:00Z",
+  "before": {
+    "period": "last 30 minutes",
+    "success": 2626,
+    "errors": 7,
+    "exceededCpuTime": 7,
+    "internal": 0,
+    "exceptions": 0,
+    "memory": 0
+  },
+  "arenaBaselineErrors": 6,
+  "note": "Dashboard covers all requests including leaderboards, not only the three Expert challenges. Snapshot read from Cloudflare Metrics."
+}
