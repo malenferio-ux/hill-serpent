@@ -5,6 +5,12 @@
 - [Профиль Hill Serpent](https://arena.battlesnake.com/battlesnakes/353a87c8-5303-4ead-aa45-38b72b2ba12e/profile).
 - Проверка API запускается кнопкой **Test Snake** в профиле змейки.
 
+## Версия 1.8.0
+
+Опубликована 17 ноября 2026. Реальная серия с Journeyman: **6:5**,
+ошибки ответа — 0 у Hill Serpent, 1 у соперника. Все 11 игр и проверки
+сохранены в [journeyman.md](journeyman.md). Это Challenge, не итог рейтинга.
+
 ## Подключённые лидерборды
 
 | Режим | Запись Hill Serpent |
