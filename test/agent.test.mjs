@@ -67,3 +67,13 @@ test('cached move ordering agrees with exhaustive simultaneous minimax', () => {
     assert.ok(values.some(x => x.move === actual.move && Math.abs(x.score - best) < 1e-7));
   }
 });
+
+
+test('equal-length enemy blocks the shared passage; a longer head can contest it', () => {
+  const equal = fromRequest(fixture({ width: 3, height: 3, bodies: [[3, 3, 3], [5, 5, 5]] }));
+  const longer = fromRequest(fixture({ width: 3, height: 3, bodies: [[3, 3, 3, 3], [5, 5, 5]] }));
+  const a = new Evaluator(equal.g, 2), b = new Evaluator(longer.g, 2);
+  a.analyze(equal); b.analyze(longer);
+  assert.equal(a.connectedSpace, 3);
+  assert.ok(b.connectedSpace > a.connectedSpace);
+});

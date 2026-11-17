@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
-import { chooseMove } from '../src/agent.mjs';
+import { chooseMove, Evaluator } from '../src/agent.mjs';
 import { fixture } from './helpers.mjs';
 import { fromRequest, toRequest, step, legalMoves, DIRECTIONS } from '../src/game.mjs';
 
@@ -114,4 +114,17 @@ test('Apprentice food race: moves toward the available meal instead of a meal th
     assert.ok(distance(target, available) < distance(request.you.head, available));
     assert.ok(distance(target, lost) > distance(request.you.head, lost));
   }
+});
+
+
+test('Journeyman regression: distant owned islands are not connected escape space', async () => {
+  const request = JSON.parse(await readFile(new URL('./fixtures/journeyman-disconnected.json', import.meta.url)));
+  const state = fromRequest(request), evaluator = new Evaluator(state.g, 2);
+  evaluator.analyze(state);
+  // Real turn 366, length 34: optimistic ownership counted 53 cells, but
+  // reaching most of them requires crossing a passage the rival reaches first.
+  assert.equal(evaluator.areas[0], 53);
+  assert.equal(evaluator.connectedSpace, 7);
+  const old = new Evaluator(state.g, 2, { connectedSafety: 0 });
+  assert.ok(evaluator.evaluate(state) < old.evaluate(state) - 150);
 });
