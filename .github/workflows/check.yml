@@ -11,6 +11,6 @@ jobs:
         with:
           node-version: '24'
       - run: npm test
-      - run: npm run bench
+      - run: node --single-threaded --single-threaded-gc tools/bench.mjs --engine wasm --work-budget 1000000 --budgets 256 --iterations 120
       - run: npm run bundle
       - run: node --check dist/worker.js
