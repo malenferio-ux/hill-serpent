@@ -1,0 +1,13 @@
+{
+  "observedAt": "2026-11-17T15:44:41.268962+00:00",
+  "source": "Cloudflare Pages production analytics UI",
+  "window": "Last 30 minutes",
+  "success": 2679,
+  "errors": 0,
+  "internal": 0,
+  "scriptException": 0,
+  "cpuExceeded": 0,
+  "memoryExceeded": 0,
+  "clientDisconnected": 0,
+  "note": "This window includes ranked games and both v1.11.0 and v1.12.0 requests. It is not a per-move CPU measurement or explanation of remote Expert timeouts."
+}

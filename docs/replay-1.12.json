@@ -1,0 +1,104 @@
+{
+  "nodes": 40000,
+  "engine": "wasm",
+  "workBudget": 1000000,
+  "mode": "standard",
+  "width": 11,
+  "height": 11,
+  "games": 11,
+  "moves": 3432,
+  "compared": 3432,
+  "httpFailures": 0,
+  "mismatches": 0,
+  "maxMs": 245,
+  "rows": [
+    {
+      "id": "31702c5f-4278-4ffc-8224-0638eb6143e7",
+      "moves": 221,
+      "compared": 221,
+      "httpFailures": 0,
+      "maxMs": 69,
+      "mismatches": []
+    },
+    {
+      "id": "d86fc483-3462-4f30-bbc6-9a5e2382e258",
+      "moves": 347,
+      "compared": 347,
+      "httpFailures": 0,
+      "maxMs": 86,
+      "mismatches": []
+    },
+    {
+      "id": "bf87087f-0acb-47c1-8b08-cb8ec6016b5d",
+      "moves": 350,
+      "compared": 350,
+      "httpFailures": 0,
+      "maxMs": 62,
+      "mismatches": []
+    },
+    {
+      "id": "40cb3fad-403c-4b34-b694-f176da7fd5ab",
+      "moves": 283,
+      "compared": 283,
+      "httpFailures": 0,
+      "maxMs": 62,
+      "mismatches": []
+    },
+    {
+      "id": "f8b2598e-d50f-4b92-b5f8-425f2abd64a6",
+      "moves": 399,
+      "compared": 399,
+      "httpFailures": 0,
+      "maxMs": 142,
+      "mismatches": []
+    },
+    {
+      "id": "c1d3f120-5845-4b4d-958a-2134dfa5a1e8",
+      "moves": 165,
+      "compared": 165,
+      "httpFailures": 0,
+      "maxMs": 105,
+      "mismatches": []
+    },
+    {
+      "id": "350347fd-9842-4570-9527-e059a0e8fc7c",
+      "moves": 307,
+      "compared": 307,
+      "httpFailures": 0,
+      "maxMs": 77,
+      "mismatches": []
+    },
+    {
+      "id": "66f3ee17-2699-4f6e-8360-a8b6c9a7fd8f",
+      "moves": 215,
+      "compared": 215,
+      "httpFailures": 0,
+      "maxMs": 72,
+      "mismatches": []
+    },
+    {
+      "id": "dc0ca179-7e25-4d83-852b-9bac6d4318d1",
+      "moves": 379,
+      "compared": 379,
+      "httpFailures": 0,
+      "maxMs": 127,
+      "mismatches": []
+    },
+    {
+      "id": "62408665-6341-40c2-a618-a6cfd25190c3",
+      "moves": 411,
+      "compared": 411,
+      "httpFailures": 0,
+      "maxMs": 245,
+      "mismatches": []
+    },
+    {
+      "id": "932a2efd-a5b0-45df-a9dd-b44ec6621a97",
+      "moves": 355,
+      "compared": 355,
+      "httpFailures": 0,
+      "maxMs": 94,
+      "mismatches": []
+    }
+  ]
+}

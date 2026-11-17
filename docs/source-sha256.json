@@ -40,7 +40,7 @@
   "tools/http-check.mjs": "2127889b267424c634f2d74704208a48ceb11303e981426cbf78d044b86431d9",
   "tools/local-game.mjs": "d7479d0b70b9778832d8b0c6d5ba3b5c6c5dbf02f45df8f0a8e5b36666592147",
   "tools/official-check.mjs": "e1d2f42e9b6930733feaa2ef4cee0c13032038fae3f215b3c5b151c4467ed078",
-  "tools/release-check.mjs": "9423f9c46daabe8e1c141241ed3bde3b2a9bfc55bf33de49adbe8b34e470be0a",
+  "tools/release-check.mjs": "b1d385a27bb774a26a96f815553dedc1944a028ffb78909adc48d49685822d92",
   "tools/replay-check.mjs": "fd5accfcdb6044dbea5142b7b4471d5413196e463233877083c7c08a8362a887",
   "tools/tune.mjs": "958906235b90ca8744897d1a6253dfce421467ee62f89327c6e12f87f0be6ea0"
 }

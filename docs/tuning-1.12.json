@@ -325,7 +325,35 @@
           "branchPenalty": 128,
           "roundedRootPenalty": true
         }
-      ]
+      ],
+      "validation128": {
+        "games": 128,
+        "seed": 90100000,
+        "weights": {},
+        "mode": "duel",
+        "opponent": "legacy",
+        "nodes": 40000,
+        "wins": 59,
+        "losses": 68,
+        "draws": 1,
+        "turns": 36418,
+        "calls": 36418,
+        "maxMs": 5.015917000000002,
+        "loopTurns": 480,
+        "opponentLoopTurns": 480,
+        "firstFoodTurns": 128,
+        "opponentFirstFoodTurns": 128,
+        "finalLength": 3738,
+        "score": 0.46484375,
+        "meanMs": 1.5069463201164017,
+        "loopRate": 0.013180295458289857,
+        "meanFirstFood": 1,
+        "meanFinalLength": 29.203125,
+        "opponentLoopRate": 0.013180295458289857,
+        "opponentMeanFirstFood": 1,
+        "branchPenalty": 256,
+        "roundedRootPenalty": true
+      }
     },
     "catchup": [
       {
@@ -549,7 +577,76 @@
           "advantage": 64
         }
       }
-    ]
+    ],
+    "growth": [
+      {
+        "games": 48,
+        "seed": 95100000,
+        "weights": {},
+        "mode": "duel",
+        "opponent": "legacy",
+        "nodes": 40000,
+        "wins": 25,
+        "losses": 23,
+        "draws": 0,
+        "turns": 13929,
+        "calls": 13929,
+        "maxMs": 4.866833,
+        "loopTurns": 122,
+        "opponentLoopTurns": 131,
+        "firstFoodTurns": 48,
+        "opponentFirstFoodTurns": 48,
+        "finalLength": 1470,
+        "score": 0.5208333333333334,
+        "meanMs": 1.4340441445904124,
+        "loopRate": 0.008758704860363271,
+        "meanFirstFood": 1,
+        "meanFinalLength": 30.625,
+        "opponentLoopRate": 0.009404838825472037,
+        "opponentMeanFirstFood": 1,
+        "variant": {
+          "name": "length96",
+          "length": 96,
+          "territory": 1.8,
+          "lead": 6,
+          "advantage": 0
+        }
+      },
+      {
+        "games": 48,
+        "seed": 95100000,
+        "weights": {},
+        "mode": "duel",
+        "opponent": "legacy",
+        "nodes": 40000,
+        "wins": 22,
+        "losses": 26,
+        "draws": 0,
+        "turns": 12384,
+        "calls": 12384,
+        "maxMs": 3.9927499999976135,
+        "loopTurns": 133,
+        "opponentLoopTurns": 144,
+        "firstFoodTurns": 48,
+        "opponentFirstFoodTurns": 48,
+        "finalLength": 1328,
+        "score": 0.4583333333333333,
+        "meanMs": 1.4862130847060762,
+        "loopRate": 0.010739664082687339,
+        "meanFirstFood": 1,
+        "meanFinalLength": 27.666666666666668,
+        "opponentLoopRate": 0.011627906976744186,
+        "opponentMeanFirstFood": 1,
+        "variant": {
+          "name": "length128",
+          "length": 128,
+          "territory": 1.8,
+          "lead": 6,
+          "advantage": 0
+        }
+      }
+    ],
+    "growthNote": "Prototype changes C leaf length weight; JS fallback remains baseline. Neither variant promoted; the small 25:23 training edge was not treated as reliable improvement."
   },
   "limitations": "Heldout 64:63:1 is inconclusive; release tests a concrete route-capacity correction, not a proven win-rate gain. Actual Expert cohort will contain all eleven games."
 }
