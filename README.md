@@ -10,7 +10,9 @@
 
 **Версия 1.12.0:** уточнена оценка маршрутов через развилки против равной или
 более длинной змейки. 42 теста; локальная проверка против своей 1.11.0 —
-64:63 и одна ничья, без убедительного перевеса. Новая серия с Expert готовится.
+64:63 и одна ничья, без убедительного перевеса. Полная серия с Expert: **4:7**, ничьих 0.
+Ошибок ответа у нас 0, у Expert 7; наш максимум 245 мс. Код в серии не менялся.
+Критерий «побед больше поражений» пока не выполнен.
 Предыдущие полные серии: 1.10.0 — 2:9; 1.11.0 — 4:6 и одна ничья.
 [Все результаты и разбор](docs/expert.md), [сборка ядра](docs/wasm.md).
 
@@ -119,7 +121,7 @@ npm run bench
 npm run arena -- --opponent space --games 40 --seed 900000 --nodes 256
 npm run arena -- --opponent search --opponent-nodes 256 --nodes 3200 --games 40 --seed 900000
 npm run tune -- --candidates 12 --games 16 --nodes 256 --seed 1000
-node tools/replay-check.mjs --games docs/expert-1.11.json --engine wasm --nodes 40000 --work-budget 1000000
+node tools/replay-check.mjs --games docs/expert-1.12.json --engine wasm --nodes 40000 --work-budget 1000000
 ```
 
 `greedy`, `space`, `hunter` — наши простые соперники; `search` — та же змейка с
