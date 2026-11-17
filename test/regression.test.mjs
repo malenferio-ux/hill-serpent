@@ -121,9 +121,9 @@ test('Journeyman regression: distant owned islands are not connected escape spac
   const request = JSON.parse(await readFile(new URL('./fixtures/journeyman-disconnected.json', import.meta.url)));
   const state = fromRequest(request), evaluator = new Evaluator(state.g, 2);
   evaluator.analyze(state);
-  // Real turn 366, length 34: optimistic ownership counted 53 cells, but
-  // reaching most of them requires crossing a passage the rival reaches first.
-  assert.equal(evaluator.areas[0], 53);
+  // Real turn 366, length 34: the old independent fills counted 53 cells.
+  // Competitive propagation stops at the contested passage and counts 7.
+  assert.equal(evaluator.areas[0], 7);
   assert.equal(evaluator.connectedSpace, 7);
   const old = new Evaluator(state.g, 2, { connectedSafety: 0 });
   assert.ok(evaluator.evaluate(state) < old.evaluate(state) - 150);
