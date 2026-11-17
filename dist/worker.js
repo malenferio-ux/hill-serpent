@@ -187,6 +187,8 @@ class Evaluator {
     this.weights = { ...(this.duel ? DUEL_WEIGHTS : DEFAULT_WEIGHTS), ...weights };
     this.distances = Array.from({ length: count }, () => new Int16Array(g.size));
     this.release = new Int16Array(g.size);
+    this.owners = new Int8Array(g.size);
+    this.claimed = new Int16Array(g.size);
     this.queue = new Int16Array(g.size);
     this.areas = new Float64Array(count);
     this.spaces = new Float64Array(count);
@@ -222,7 +224,71 @@ class Evaluator {
       - this.weights.connectedSafety * this.weights.trap * deficit;
   }
 
+  // Contested cells do not propagate a route behind a bottleneck.
+  // Larger heads win equal arrivals before the next layer expands.
   analyze(state) {
+    if (!this.duel || state.constrictor) return this.analyzeLegacy(state);
+    const {g,snakes} = state, {release,queue,areas,spaces,foodDistances,distances} = this;
+    const {owners,claimed} = this;
+    owners.fill(-1); claimed.fill(999);
+    release.fill(0); areas.fill(0); spaces.fill(0); foodDistances.fill(999);
+    this.raceFoodDistances.fill(999); this.staticSpaces.fill(0); this.tailConnected.fill(0);
+    for (const s of snakes) if (s.alive) for (let k=0;k<s.body.length;k++) release[s.body[k]]=Math.max(release[s.body[k]],s.body.length-k);
+    for (const d of distances) d.fill(999);
+    let read=0,end=0;
+    for (let i=0;i<snakes.length;i++) if (snakes[i].alive) { const p=snakes[i].body[0];owners[p]=i;claimed[p]=0;queue[end++]=p; }
+    while(read<end) {
+      const p=queue[read++], i=owners[p]; if(i<0) continue;
+      const d=claimed[p]+1, snake=snakes[i];
+      for(let m=0;m<4;m++) {
+        const q=g.next[p*4+m];
+        if(q<0 || release[q]>d || claimed[q]<d)continue;
+        if(!state.food[q] && snake.health<=d+state.hazards[q]*state.hazardDamage)continue;
+        if(claimed[q]===999) { owners[q]=i; claimed[q]=d; queue[end++]=q; }
+        else if (owners[q]!==i && owners[q]>=0) {
+          const other=owners[q];
+          if(snake.body.length>snakes[other].body.length) owners[q]=i;
+          else if(snake.body.length===snakes[other].body.length) owners[q]=-2;
+        }
+      }
+    }
+    for(let p=0;p<g.size;p++) { const i=owners[p]; if(i<0)continue;
+      distances[i][p]=claimed[p]; areas[i]+=state.hazards[p]?.2:1; spaces[i]+=state.hazards[p]?.25:1;
+      if(state.food[p])foodDistances[i]=Math.min(foodDistances[i],claimed[p]);
+    }
+    for(let i=0;i<snakes.length;i++) {
+      this.staticSpaces[i]=spaces[i]; this.raceFoodDistances[i]=foodDistances[i];
+      if(i===0 && this.weights.staticSafety>0) this.measureStaticRoom(state,i);
+      if(foodDistances[i]===999) for(let p=0;p<g.size;p++)if(state.food[p]) {
+        const h=snakes[i].body[0];let dx=Math.abs(p%g.width-h%g.width),dy=Math.abs((p/g.width|0)-(h/g.width|0));
+        if(g.wrapped){dx=Math.min(dx,g.width-dx);dy=Math.min(dy,g.height-dy);}
+        foodDistances[i]=Math.min(foodDistances[i],dx+dy);
+      }
+    }
+    this.connectedSpace=areas[0];
+  }
+
+  measureStaticRoom(state, index) {
+    const s=state.snakes[index], {g}=state, {seen,queue,release}=this;
+    if(!s.alive)return;
+    seen.fill(0);seen[s.body[0]]=1;queue[0]=s.body[0];
+    let read=0,end=1,room=1;
+    const tail=s.body[s.body.length-1],target=s.body.length+2;
+    while(read<end && room<target) {
+      const p=queue[read++];
+      for(let move=0;move<4;move++) {
+        const q=g.next[p*4+move];
+        if(q<0||seen[q]||release[q]>this.weights.staticTailSteps||release[q]>seen[p])continue;
+        if(!state.food[q]&&s.health<=1+state.hazards[q]*state.hazardDamage)continue;
+        seen[q]=seen[p]+1;queue[end++]=q;room+=state.hazards[q]?.25:1;
+        if(q===tail&&q!==s.body[0])this.tailConnected[index]=1;
+        if(room>=target)break;
+      }
+    }
+    this.staticSpaces[index]=room;
+  }
+
+  analyzeLegacy(state) {
     const { g, snakes } = state;
     const { release, queue, distances, areas, spaces, foodDistances } = this;
     release.fill(0);
@@ -659,7 +725,7 @@ function decide(state, options = {}) {
 
 // worker.mjs
 
-const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.9.2' };
+const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.10.0' };
 
 async function handle(request, env = {}) {
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
