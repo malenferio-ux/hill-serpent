@@ -1,0 +1,82 @@
+[
+  {
+    "id": "d40287cf-051d-48d3-be02-c8e8afdf14fc",
+    "result": "loss",
+    "turn": 276,
+    "ourLength": 27,
+    "opponentLength": 29,
+    "cause": "head-collision",
+    "opponentCause": "",
+    "p95Ms": 39,
+    "maxMs": 141,
+    "errors": [],
+    "opponentErrors": [
+      "A response was not received before the timeout"
+    ],
+    "opponentMaxMs": 500
+  },
+  {
+    "id": "99afc3fd-0153-4a41-8c20-b43bb3366137",
+    "result": "win",
+    "turn": 446,
+    "ourLength": 36,
+    "opponentLength": 29,
+    "cause": "",
+    "opponentCause": "self-collision",
+    "p95Ms": 38,
+    "maxMs": 118,
+    "errors": [],
+    "opponentErrors": [
+      "A response was not received before the timeout"
+    ],
+    "opponentMaxMs": 500
+  },
+  {
+    "id": "50c0e8d5-331f-418a-a177-7414926d500e",
+    "result": "loss",
+    "turn": 412,
+    "ourLength": 35,
+    "opponentLength": 34,
+    "cause": "wall-collision",
+    "opponentCause": "",
+    "p95Ms": 38,
+    "maxMs": 249,
+    "errors": [],
+    "opponentErrors": [
+      "A response was not received before the timeout"
+    ],
+    "opponentMaxMs": 500
+  },
+  {
+    "id": "672ab38a-b119-435c-a13f-6396b26499fb",
+    "result": "win",
+    "turn": 352,
+    "ourLength": 37,
+    "opponentLength": 25,
+    "cause": "",
+    "opponentCause": "head-collision",
+    "p95Ms": 37,
+    "maxMs": 119,
+    "errors": [],
+    "opponentErrors": [
+      "A response was not received before the timeout"
+    ],
+    "opponentMaxMs": 500
+  },
+  {
+    "id": "1c088876-42b4-430c-b9e1-01c2b9d6b178",
+    "result": "loss",
+    "turn": 311,
+    "ourLength": 31,
+    "opponentLength": 24,
+    "cause": "snake-collision",
+    "opponentCause": "",
+    "p95Ms": 35,
+    "maxMs": 75,
+    "errors": [],
+    "opponentErrors": [
+      "A response was not received before the timeout"
+    ],
+    "opponentMaxMs": 500
+  }
+]
