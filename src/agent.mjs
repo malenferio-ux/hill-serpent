@@ -1,4 +1,5 @@
 import { DIRECTIONS, fromRequest, occupancy, legalMoves, step } from './game.mjs';
+import { routeSpace } from './space.mjs';
 
 export const DEFAULT_WEIGHTS = Object.freeze({
   territory: 1.8, length: 32, food: 6, health: 0.16,
@@ -455,6 +456,19 @@ export function decide(state, options = {}) {
       }
       survival[DIRECTIONS[move]] = probe;
       if (probe.trapped) guardPenalty[move] += Math.max(0, Math.min(5000, Number(options.guardPenalty ?? 1200)));
+    }
+  }
+
+  // Static room can span several branches behind the same articulation.
+  // This is a bounded preference, not a proof: future tail moves can open exits.
+  const branchPenalty = options.branchPenalty ?? 256;
+  if(branchPenalty > 0 && !state.g.wrapped && !state.royale && !state.hazards.some(Boolean) && state.snakes.length===2 && state.snakes[0].body.length<=state.snakes[1].body.length && !state.constrictor && state.snakes[0].body.length>=12){
+    const target=state.snakes[0].body.length+2;
+    for(const move of mine){let worst=0;
+      for(const reply of opponents[1]){const next=step(state,[move,reply]);if(!next.snakes[0].alive||!next.snakes[1].alive)continue;
+        const space=routeSpace(next);if(space.room>=target)worst=Math.max(worst,Math.max(0,target-space.route)/target);
+      }
+      guardPenalty[move]+=Math.round(branchPenalty*worst);
     }
   }
 

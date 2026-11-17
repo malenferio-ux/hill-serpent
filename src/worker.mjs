@@ -1,6 +1,6 @@
 import { chooseMove } from './agent.mjs';
 
-export const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.11.0' };
+export const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.12.0' };
 
 export async function handle(request, env = {}, engine = null) {
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
