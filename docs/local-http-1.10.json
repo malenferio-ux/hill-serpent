@@ -1,0 +1,402 @@
+{
+  "url": "http://localhost:8080",
+  "expectedVersion": "1.10.0",
+  "timeoutMs": 500,
+  "checkedAt": "2026-11-17T13:25:50.656Z",
+  "metadata": {
+    "apiversion": "1",
+    "author": "malenferio-ux",
+    "color": "#8b5cf6",
+    "head": "default",
+    "tail": "default",
+    "version": "1.10.0"
+  },
+  "metadataError": null,
+  "rows": [
+    {
+      "index": 0,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 43.071291000000016
+    },
+    {
+      "index": 1,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 45.90100000000001
+    },
+    {
+      "index": 2,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 26.382042000000013
+    },
+    {
+      "index": 3,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "left",
+      "expected": "left",
+      "error": null,
+      "ms": 32.94225
+    },
+    {
+      "index": 4,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 25.573999999999955
+    },
+    {
+      "index": 5,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 31.978166999999985
+    },
+    {
+      "index": 6,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 36.66962500000005
+    },
+    {
+      "index": 7,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 34.15795800000001
+    },
+    {
+      "index": 8,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 33.91145899999992
+    },
+    {
+      "index": 9,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "left",
+      "expected": "left",
+      "error": null,
+      "ms": 33.852457999999956
+    },
+    {
+      "index": 10,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 33.885167000000024
+    },
+    {
+      "index": 11,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "error": null,
+      "ms": 33.416999999999916
+    },
+    {
+      "index": 12,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 33.19287499999996
+    },
+    {
+      "index": 13,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 33.71670800000004
+    },
+    {
+      "index": 14,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 32.95845799999995
+    },
+    {
+      "index": 15,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "left",
+      "expected": "left",
+      "error": null,
+      "ms": 33.25220799999988
+    },
+    {
+      "index": 16,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 33.503957999999784
+    },
+    {
+      "index": 17,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "error": null,
+      "ms": 33.56191599999988
+    },
+    {
+      "index": 18,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 26.30945799999995
+    },
+    {
+      "index": 19,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 17.060915999999906
+    },
+    {
+      "index": 20,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 17.9252919999999
+    },
+    {
+      "index": 21,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 17.904042000000118
+    },
+    {
+      "index": 22,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 16.07054200000016
+    },
+    {
+      "index": 23,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 20.859416999999894
+    },
+    {
+      "index": 24,
+      "mode": "standard",
+      "turn": 344,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 1.390625
+    },
+    {
+      "index": 25,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "left",
+      "expected": "left",
+      "error": null,
+      "ms": 31.85329200000001
+    },
+    {
+      "index": 26,
+      "mode": "standard",
+      "turn": 11,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "error": null,
+      "ms": 27.615957999999864
+    },
+    {
+      "index": 27,
+      "mode": "standard",
+      "turn": 208,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "error": null,
+      "ms": 1.2371249999998781
+    },
+    {
+      "index": 28,
+      "mode": "standard",
+      "turn": 203,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 14.623624999999947
+    },
+    {
+      "index": 29,
+      "mode": "standard",
+      "turn": 51,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 0.9109580000001642
+    },
+    {
+      "index": 30,
+      "mode": "standard",
+      "turn": 219,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "error": null,
+      "ms": 0.9668750000000728
+    },
+    {
+      "index": 31,
+      "mode": "standard",
+      "turn": 372,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 0.7942089999999098
+    },
+    {
+      "index": 32,
+      "mode": "standard",
+      "turn": 52,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 24.497249999999894
+    },
+    {
+      "index": 33,
+      "mode": "standard",
+      "turn": 366,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 0.8365000000001146
+    },
+    {
+      "index": 34,
+      "mode": "standard",
+      "turn": 47,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 9.629791999999952
+    },
+    {
+      "index": 35,
+      "mode": "standard",
+      "turn": 319,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 12.204958000000033
+    },
+    {
+      "index": 36,
+      "mode": "standard",
+      "turn": 248,
+      "status": 200,
+      "move": "left",
+      "expected": "left",
+      "error": null,
+      "ms": 23.61499999999978
+    },
+    {
+      "index": 37,
+      "mode": "standard",
+      "turn": 221,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 22.954541999999947
+    }
+  ],
+  "requests": 38,
+  "failures": 0,
+  "meanMs": 23.715497789473655,
+  "p95Ms": 43.071291000000016,
+  "maxMs": 45.90100000000001
+}
