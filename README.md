@@ -8,7 +8,14 @@
 [Профиль на арене](https://arena.battlesnake.com/battlesnakes/353a87c8-5303-4ead-aa45-38b72b2ba12e/profile).
 Подключены Duels, Standard, Royale и Constrictor.
 
-**Версия 1.8.0:** оценка пространства учитывает связность: клетки за проходом,
+**Версия 1.9.0:** поиск продлевает вынужденные пути на два дополнительных
+хода в пределах общего бюджета. Для Cloudflare явно задан
+`DUEL_SEARCH_NODES=384`, а проверка ответов соперника ограничена 192 узлами
+на корневой ход. Это уменьшает нагрузку после обнаруженных превышений CPU.
+Локальный запуск сохраняет 6400 узлов в дуэлях. Серия с Expert выполняется;
+результаты будут опубликованы в [отчёте](docs/expert.md).
+
+**Предыдущая версия 1.8.0:** оценка пространства учитывает связность: клетки за проходом,
 который соперник займёт раньше, не считаются безопасным выходом.
 Сохраняются выбор доступной еды, защита от коридоров и подрезания.
 Исходная серия с Journeyman на 1.7.1 — **2:3**. Версия 1.8.0 получила
@@ -110,7 +117,7 @@ npm run bench
 npm run arena -- --opponent space --games 40 --seed 900000 --nodes 256
 npm run arena -- --opponent search --opponent-nodes 256 --nodes 3200 --games 40 --seed 900000
 npm run tune -- --candidates 12 --games 16 --nodes 256 --seed 1000
-node tools/replay-check.mjs --games docs/apprentice-1.7.1.json --nodes 512
+node tools/replay-check.mjs --games docs/expert-1.9.json --nodes 384
 ```
 
 `greedy`, `space`, `hunter` — наши простые соперники; `search` — та же змейка с
@@ -165,7 +172,7 @@ npm run deploy:pages
 альтернатива для отдельного Workers-проекта на `workers.dev`.
 
 Для бесплатного Cloudflare Workers подготовлен `wrangler.worker.toml` с базовым бюджетом
-256 узлов: для дуэлей `/move` использует 2× этот бюджет (512), для четырёх
+256 узлов: для дуэлей задан отдельный `DUEL_SEARCH_NODES=384`, для четырёх
 змеек и Constrictor — базовый бюджет. Нужен ваш аккаунт Cloudflare. После входа:
 
 ```sh
