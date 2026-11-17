@@ -1,0 +1,372 @@
+{
+  "url": "https://hill-serpent.pages.dev",
+  "expectedVersion": "1.9.2",
+  "timeoutMs": 500,
+  "checkedAt": "2026-11-17T12:11:23.592Z",
+  "metadata": {
+    "apiversion": "1",
+    "author": "malenferio-ux",
+    "color": "#8b5cf6",
+    "head": "default",
+    "tail": "default",
+    "version": "1.9.2"
+  },
+  "metadataError": null,
+  "rows": [
+    {
+      "index": 0,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 111.55779099999995
+    },
+    {
+      "index": 1,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 194.97466699999995
+    },
+    {
+      "index": 2,
+      "mode": "standard",
+      "turn": 0,
+      "status": null,
+      "move": null,
+      "expected": "right",
+      "error": "TimeoutError: The operation was aborted due to timeout",
+      "ms": 505.24591699999996
+    },
+    {
+      "index": 3,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "left",
+      "expected": "left",
+      "error": null,
+      "ms": 382.1276250000001
+    },
+    {
+      "index": 4,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 113.656833
+    },
+    {
+      "index": 5,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "error": null,
+      "ms": 134.63033300000006
+    },
+    {
+      "index": 6,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 87.48950000000013
+    },
+    {
+      "index": 7,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 62.13529200000039
+    },
+    {
+      "index": 8,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 94.1059580000001
+    },
+    {
+      "index": 9,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 72.45708299999978
+    },
+    {
+      "index": 10,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 66.07983299999978
+    },
+    {
+      "index": 11,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 74.18325000000004
+    },
+    {
+      "index": 12,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 194.40433299999995
+    },
+    {
+      "index": 13,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 96.17216599999983
+    },
+    {
+      "index": 14,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 454.40262500000017
+    },
+    {
+      "index": 15,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 116.82170799999994
+    },
+    {
+      "index": 16,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 80.35170799999969
+    },
+    {
+      "index": 17,
+      "mode": "royale",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 75.45866700000033
+    },
+    {
+      "index": 18,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 54.09595800000034
+    },
+    {
+      "index": 19,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 98.16804200000024
+    },
+    {
+      "index": 20,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 91.87024999999994
+    },
+    {
+      "index": 21,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 100.79529199999979
+    },
+    {
+      "index": 22,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 49.038125000000036
+    },
+    {
+      "index": 23,
+      "mode": "constrictor",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 135.1846660000001
+    },
+    {
+      "index": 24,
+      "mode": "standard",
+      "turn": 344,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 60.71345800000017
+    },
+    {
+      "index": 25,
+      "mode": "standard",
+      "turn": 0,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 73.3153339999999
+    },
+    {
+      "index": 26,
+      "mode": "standard",
+      "turn": 11,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "error": null,
+      "ms": 50.99908300000061
+    },
+    {
+      "index": 27,
+      "mode": "standard",
+      "turn": 208,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "error": null,
+      "ms": 45.633875000000444
+    },
+    {
+      "index": 28,
+      "mode": "standard",
+      "turn": 203,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 81.82824999999957
+    },
+    {
+      "index": 29,
+      "mode": "standard",
+      "turn": 51,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 46.97087499999998
+    },
+    {
+      "index": 30,
+      "mode": "standard",
+      "turn": 219,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "error": null,
+      "ms": 50.77824999999939
+    },
+    {
+      "index": 31,
+      "mode": "standard",
+      "turn": 372,
+      "status": 200,
+      "move": "up",
+      "expected": "up",
+      "error": null,
+      "ms": 115.406833
+    },
+    {
+      "index": 32,
+      "mode": "standard",
+      "turn": 52,
+      "status": 200,
+      "move": "down",
+      "expected": "down",
+      "error": null,
+      "ms": 60.39408300000014
+    },
+    {
+      "index": 33,
+      "mode": "standard",
+      "turn": 366,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 43.69408299999941
+    },
+    {
+      "index": 34,
+      "mode": "standard",
+      "turn": 47,
+      "status": 200,
+      "move": "right",
+      "expected": "right",
+      "error": null,
+      "ms": 76.04591700000037
+    }
+  ],
+  "requests": 35,
+  "failures": 1,
+  "meanMs": 118.60536180000001,
+  "p95Ms": 454.40262500000017,
+  "maxMs": 505.24591699999996
+}

@@ -1,9 +1,9 @@
 {
-  "src/agent.mjs": "307e50ff91af658241afd400090842cb10071c36d60565d28c836cb015fb1ffc",
+  "src/agent.mjs": "7aa3de1b3e2553554f0af2f6d29e6b7f0a60322cfff76dbdc475155626800781",
   "src/game.mjs": "9f6475603a85657b12657fda84455ccfdcc90ac8930c377026744e757e133a09",
   "src/server.mjs": "3f0432772820f3043340e697bf76e818bdd3eb275907fad0ab3c38d915ada9bf",
-  "src/worker.mjs": "1e79d744f5f6f657a0b098766ae3ae0006914075eb7d023d50a77cdff42dd63a",
-  "test/agent.test.mjs": "e546f682821e12c7622808f1012d6361babcc67271605990047869299b9ddced",
+  "src/worker.mjs": "58d3bcdecc96b6defb072d03730401285c815848d36ffec8aa7632bf378e1fde",
+  "test/agent.test.mjs": "821fc2036f758c2b4cd8e800f35b9f0fa601735791642a515de43dc9df3e0c78",
   "test/fixtures/apprentice-corridor.json": "18504dc9c970fcaab38dd689787812af4efb9b4dc75671348c28db6c784a8c2f",
   "test/fixtures/apprentice-food-race.json": "476f7569cb927f6ba347701b7d26a9f212a964567f86f8c5dfe743ccc3db1e28",
   "test/fixtures/apprentice-long-corridor.json": "e11dbea8ae1d32f9c1ec34f5a1cdb83ef25931771c369fc2b76ce6cd2f183eb3",

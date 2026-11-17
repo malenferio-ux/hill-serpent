@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-11-17T12:14:48.241189+00:00",
+  "source": "Cloudflare Pages production Metrics UI",
+  "period": "Last 30 minutes",
+  "success": 3605,
+  "errors": 0,
+  "exceededCpuTimeLimits": 0,
+  "internal": 0,
+  "scriptThrewException": 0,
+  "exceededMemory": 0,
+  "note": "Includes background ranking matches and more than one deployed 1.9.x version. This is not proof of the cause of the separate client-side timeout."
+}
