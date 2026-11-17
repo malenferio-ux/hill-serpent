@@ -35,7 +35,10 @@ async function series({games=16,seed=4100000,weights={},mode='duel',opponent='le
  }
  out.score=(out.wins+.5*out.draws)/games;out.meanMs=out.totalMs/out.calls;out.loopRate=out.loopTurns/out.turns;out.meanFirstFood=out.firstFoodTurns/games;out.meanFinalLength=out.finalLength/games;out.opponentLoopRate=out.opponentLoopTurns/out.turns;out.opponentMeanFirstFood=out.opponentFirstFoodTurns/games;delete out.totalMs;return out;
 }
-const result=await series({games:Number(args.games??64),seed:Number(args.seed??15100000),nodes:Number(args.nodes??256),opponentNodes:Number(args['baseline-nodes']??args.nodes??256),mode:args.mode??'duel',opponent:args.opponent??'legacy'});
+const engine=args.engine==='wasm'?(await import('../src/duel-node.mjs')).duelEngine:null;
+const workBudget=Number(args['work-budget']??1000000);
+const result=await series({...(engine?{challengerFn:(s,o)=>challenger(s,{...o,depth:12,workBudget,searchEngine:engine.search,survivalEngine:engine.guards})}:{}),games:Number(args.games??64),seed:Number(args.seed??15100000),nodes:Number(args.nodes??256),opponentNodes:Number(args['baseline-nodes']??args.nodes??256),mode:args.mode??'duel',opponent:args.opponent??'legacy'});
+result.engine=engine?'wasm':'js';result.workBudget=engine?workBudget:0;
 result.note='Local comparison with supplied baseline, reported main-search node limits and paired swapped starts; the current agent may also use bounded survival and opponent-reply probes. Loop = same head cell within 4–12 turns without growth.';
 await mkdir('results',{recursive:true});
 await writeFile('results/release-comparison.json',JSON.stringify(result,null,2));

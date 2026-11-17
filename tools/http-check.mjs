@@ -3,6 +3,7 @@ import{start,argumentsOf}from'./local-game.mjs';
 import{toRequest}from'../src/game.mjs';
 import{chooseMove}from'../src/agent.mjs';
 import{DETAILS}from'../src/worker.mjs';
+import{duelEngine}from'../src/duel-node.mjs';
 const args=argumentsOf(process.argv.slice(2));
 const url=String(args.url??'https://hill-serpent.pages.dev').replace(/\/$/,'');
 const timeout=Number(args.timeout??500),baseNodes=Number(args.nodes??256),expectedVersion=args.version??DETAILS.version;
@@ -11,8 +12,11 @@ try{const r=await fetch(url+'/',{signal:AbortSignal.timeout(5000)});report.metad
 const requests=[];for(const mode of['duel','standard','royale','constrictor'])for(let i=0;i<6;i++)requests.push(toRequest(start(18100000+i,mode)));
 for(const name of['novice-turn-344','rematch-opening','rematch-turn-11','apprentice-corridor','apprentice-pocket','apprentice-wall-cut','apprentice-top-cut','apprentice-long-corridor','apprentice-food-race','journeyman-disconnected','expert-http-failure','expert-right-pocket','expert-top-strip','expert-left-wall'])requests.push(JSON.parse(await readFile(new URL('../test/fixtures/'+name+'.json',import.meta.url))));
 for(let i=0;i<requests.length;i++){
- const request=requests[i],nodes=request.board.snakes.length===2&&request.game.ruleset.name!=='constrictor'?Number(args['duel-nodes']??(url.includes('localhost')?baseNodes*2:384)):baseNodes;
- const expected=chooseMove(request,{nodes}).move,before=performance.now(),row={index:i,mode:request.game.ruleset.name,turn:request.turn,status:null,move:null,expected,error:null,ms:0};
+ const request=requests[i],local=url.includes('localhost'),duel=request.board.snakes.length===2&&request.game.ruleset.name!=='constrictor';
+ const accelerated=duel&&request.game.ruleset.name==='standard'&&!request.board.hazards?.length;
+ const nodes=accelerated?Number(args['duel-nodes']??40000):duel?Number(args['js-duel-nodes']??(local?6400:384)):baseNodes;
+ const workBudget=Number(args['work-budget']??(local?12000000:1000000));
+ const expected=chooseMove(request,{nodes,depth:accelerated?12:7,...(accelerated?{workBudget,searchEngine:duelEngine.search,survivalEngine:duelEngine.guards}:{})}).move,before=performance.now(),row={index:i,mode:request.game.ruleset.name,turn:request.turn,status:null,move:null,expected,error:null,ms:0};
  try{const r=await fetch(url+'/move',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(request),signal:AbortSignal.timeout(timeout)});row.status=r.status;const data=await r.json();row.move=data.move??null;if(!r.ok)row.error='HTTP '+r.status;else if(row.move!==expected)row.error='Move differs from local code';}catch(e){row.error=e.name+': '+e.message;}
  row.ms=performance.now()-before;report.rows.push(row);
 }

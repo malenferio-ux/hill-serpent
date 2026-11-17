@@ -6,6 +6,9 @@ import { toRequest, step, legalMoves } from '../src/game.mjs';
 import { start, environment, random, argumentsOf } from './local-game.mjs';
 
 const args = argumentsOf(process.argv.slice(2));
+const engine=args.engine==='wasm'?(await import('../src/duel-node.mjs')).duelEngine:null;
+const workBudget=Number(args['work-budget']??1000000);
+function options(request,nodes){const accelerated=engine&&request.board.snakes.length===2&&request.game.ruleset.name==='standard'&&!request.board.hazards?.length;return accelerated?{nodes:40000,depth:12,workBudget,searchEngine:engine.search,survivalEngine:engine.guards}:{nodes};}
 const iterations = Number(args.iterations ?? 120);
 const samplingStride = Math.max(1, Number(args.stride ?? 1) | 0);
 const samples = [];
@@ -27,18 +30,18 @@ const budgets = String(args.budgets ?? '128,256,512,1024,3200,6400').split(',').
 if (budgets.some(n => !Number.isFinite(n) || n < 64)) throw new Error('Invalid --budgets list');
 for (const nodes of budgets) {
   // Cold measurements precede a short warmup. All decisions run serially.
-  const cold = performance.now(); chooseMove(samples[0].request, { nodes });
+  const cold = performance.now(); chooseMove(samples[0].request, options(samples[0].request,nodes));
   const coldMs = performance.now() - cold;
-  for (let i = 0; i < 20; i++) chooseMove(samples[i % samples.length].request, { nodes });
+  for (let i = 0; i < 20; i++) chooseMove(samples[i % samples.length].request, options(samples[i % samples.length].request,nodes));
   const times = [], cpu = process.cpuUsage();
   for (let i = 0; i < iterations; i++) {
     const before = performance.now();
-    chooseMove(samples[(i * samplingStride) % samples.length].request, { nodes });
+    chooseMove(samples[(i * samplingStride) % samples.length].request, options(samples[(i * samplingStride) % samples.length].request,nodes));
     times.push(performance.now() - before);
   }
   const used = process.cpuUsage(cpu);
   times.sort((a, b) => a - b);
-  rows.push({ nodes, samples: iterations, coldMs,
+  rows.push({ nodes, engine:engine?'wasm':'js',workBudget:engine?workBudget:0, samples: iterations, coldMs,
     meanMs: times.reduce((sum, t) => sum + t, 0) / times.length,
     p50Ms: times[(times.length * 0.5) | 0], p95Ms: times[(times.length * 0.95) | 0],
     maxMs: times.at(-1), cpuMsPerMove: (used.user + used.system) / 1000 / iterations });
