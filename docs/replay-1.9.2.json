@@ -1,0 +1,54 @@
+{
+  "nodes": 384,
+  "mode": "standard",
+  "width": 11,
+  "height": 11,
+  "games": 5,
+  "moves": 1476,
+  "compared": 1476,
+  "httpFailures": 0,
+  "mismatches": 0,
+  "maxMs": 129,
+  "rows": [
+    {
+      "id": "aa2717ac-c62d-418c-bd41-aac4302b95f9",
+      "moves": 344,
+      "compared": 344,
+      "httpFailures": 0,
+      "maxMs": 129,
+      "mismatches": []
+    },
+    {
+      "id": "8148cdde-94b1-4385-b030-08a66e490544",
+      "moves": 294,
+      "compared": 294,
+      "httpFailures": 0,
+      "maxMs": 114,
+      "mismatches": []
+    },
+    {
+      "id": "07a8d3cc-c01f-4745-a757-9cd5643d8e8c",
+      "moves": 308,
+      "compared": 308,
+      "httpFailures": 0,
+      "maxMs": 82,
+      "mismatches": []
+    },
+    {
+      "id": "33821043-56bd-4fa6-a523-a29a94b29a9a",
+      "moves": 293,
+      "compared": 293,
+      "httpFailures": 0,
+      "maxMs": 103,
+      "mismatches": []
+    },
+    {
+      "id": "e7cdfa32-978d-4197-94db-9b268ac3384c",
+      "moves": 237,
+      "compared": 237,
+      "httpFailures": 0,
+      "maxMs": 93,
+      "mismatches": []
+    }
+  ]
+}
