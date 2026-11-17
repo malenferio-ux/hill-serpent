@@ -1,0 +1,74 @@
+[
+  {
+    "id": "4246c504-9d42-4546-b1b3-45c20d5ef6cd",
+    "result": "loss",
+    "turn": 406,
+    "ourLength": 35,
+    "opponentLength": 42,
+    "cause": "self-collision",
+    "opponentCause": "",
+    "p95Ms": 51,
+    "maxMs": 321,
+    "errors": [],
+    "opponentErrors": [],
+    "opponentMaxMs": 253
+  },
+  {
+    "id": "72a80212-2ac9-47e5-8de9-bb56cf468b0a",
+    "result": "loss",
+    "turn": 301,
+    "ourLength": 22,
+    "opponentLength": 35,
+    "cause": "wall-collision",
+    "opponentCause": "",
+    "p95Ms": 41,
+    "maxMs": 92,
+    "errors": [],
+    "opponentErrors": [],
+    "opponentMaxMs": 274
+  },
+  {
+    "id": "94bb496e-e5df-4e6c-ae2d-8edae9f1546a",
+    "result": "loss",
+    "turn": 238,
+    "ourLength": 23,
+    "opponentLength": 29,
+    "cause": "self-collision",
+    "opponentCause": "",
+    "p95Ms": 48,
+    "maxMs": 203,
+    "errors": [],
+    "opponentErrors": [],
+    "opponentMaxMs": 253
+  },
+  {
+    "id": "f589ad51-a91f-4631-90af-9da7a0b8a92a",
+    "result": "loss",
+    "turn": 221,
+    "ourLength": 25,
+    "opponentLength": 26,
+    "cause": "snake-collision",
+    "opponentCause": "",
+    "p95Ms": 49,
+    "maxMs": 196,
+    "errors": [],
+    "opponentErrors": [],
+    "opponentMaxMs": 252
+  },
+  {
+    "id": "b84b22a3-90d7-4b25-9ec8-5c73b0e3d560",
+    "result": "loss",
+    "turn": 547,
+    "ourLength": 37,
+    "opponentLength": 41,
+    "cause": "self-collision",
+    "opponentCause": "",
+    "p95Ms": 50,
+    "maxMs": 97,
+    "errors": [],
+    "opponentErrors": [
+      "A response was not received before the timeout"
+    ],
+    "opponentMaxMs": 500
+  }
+]
