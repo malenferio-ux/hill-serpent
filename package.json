@@ -1,6 +1,6 @@
 {
   "name": "hill-serpent",
-  "version": "1.10.0",
+  "version": "1.11.0",
   "private": true,
   "type": "module",
   "description": "Original bounded-search Battlesnake for Duels, Standard, Royale and Constrictor",
@@ -16,7 +16,7 @@
     "bundle": "node tools/bundle.mjs",
     "deploy": "wrangler pages deploy dist/pages --project-name=hill-serpent",
     "deploy:pages": "npm run deploy",
-    "deploy:worker": "wrangler deploy --config wrangler.worker.toml",
+    "deploy:worker": "npm run bundle && wrangler deploy --config wrangler.worker.toml",
     "dev:edge": "wrangler pages dev dist/pages"
   },
   "license": "MIT",
