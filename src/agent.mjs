@@ -393,6 +393,7 @@ export function chooseMove(request, options = {}) {
 export function decide(state, options = {}) {
   const nodeLimit = Math.max(64, Math.min(40_000, Number(options.nodes) || 3200));
   const maxDepth = Math.max(1, Math.min(12, Number(options.depth) || 7));
+  const accelerated = options.searchEngine && (!options.weights || !Object.keys(options.weights).length) && state.snakes.length===2 && !state.constrictor && !state.royale && !state.g.wrapped && !state.hazards.some(Boolean);
   const rootOccupied = occupancy(state);
   const mine = legalMoves(state, 0, rootOccupied);
   if (mine.length === 1) return { move: DIRECTIONS[mine[0]], score: 0, nodes: 0, depth: 0, fallbackScores: {}, survival: {}, forced: true };
@@ -438,13 +439,14 @@ export function decide(state, options = {}) {
     }
   }
   if (options.soloGuard !== false && state.snakes.length === 2 && !state.constrictor) {
+    const native = accelerated ? options.survivalEngine?.(state,options) : null;
     for (const move of mine) {
-      const probe = probeSurvival(state, move, Math.min(64, Math.max(20, state.snakes[0].body.length + 8)), 256);
+      const probe = native?.[DIRECTIONS[move]] ?? probeSurvival(state, move, Math.min(64, Math.max(20, state.snakes[0].body.length + 8)), 256);
       const ownHead = state.snakes[0].body[0], otherHead = state.snakes[1].body[0], target = state.g.next[ownHead * 4 + move];
       const x = target % state.g.width, y = target / state.g.width | 0;
       const edge = Math.min(x, y, state.g.width - 1 - x, state.g.height - 1 - y);
       const gap = Math.abs(ownHead % state.g.width - otherHead % state.g.width) + Math.abs((ownHead / state.g.width | 0) - (otherHead / state.g.width | 0));
-      if (options.replyGuard !== false && !probe.trapped && (gap <= 5 || (edge <= 2 && gap <= 10))) {
+      if (!native && options.replyGuard !== false && !probe.trapped && (gap <= 5 || (edge <= 2 && gap <= 10))) {
         const joint = probeReplies(state, move, 20, Math.max(64, Math.min(512, Number(options.replyNodes) || 192)));
         probe.soloNodes = probe.nodes; probe.replyNodes = joint.nodes;
         probe.replyExhausted = joint.exhausted; probe.replyDepth = joint.deepest;
@@ -482,6 +484,9 @@ export function decide(state, options = {}) {
   }
 
   if (allowedRoot.length === 1) return { move: DIRECTIONS[allowedRoot[0]], score: bestScore, nodes: 0, depth: 0, fallbackScores: scores, survival, forced: true };
+
+  if(accelerated)
+    return {...options.searchEngine(state,{nodeLimit,maxDepth,allowedRoot,guardPenalty,bestMove,forcedExtension:options.forcedExtension??2,workBudget:options.workBudget??0}),fallbackScores:scores,survival};
 
   function search(s, depth, alpha, beta, ply, preferred = -1, extensions = 0) {
     const terminal = !s.snakes[0].alive || (s.snakes.length > 1 && !s.snakes.slice(1).some(x => x.alive));
