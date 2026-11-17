@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-11-17T14:24:31.913804+00:00",
+  "source": "Cloudflare Pages production Metrics UI",
+  "period": "Last 30 minutes",
+  "success": 2474,
+  "errors": 0,
+  "exceededCpuTimeLimits": 0,
+  "internal": 0,
+  "scriptThrewException": 0,
+  "exceededMemory": 0,
+  "note": "Window includes ranking games and both 1.10/1.11 deployments. Does not establish the cause of client-side 500 ms timeouts."
+}

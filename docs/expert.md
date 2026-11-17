@@ -1,10 +1,10 @@
 # Expert: версия 1.11.0
 
-17 ноября 2026. **Преимущество над Expert пока не подтверждено.**
+17 ноября 2026. **Версия 1.11.0: 4 побед, 6 поражений, 1 ничьих в 11 дуэлях.**
 Первая серия после разбора трёх поражений закончилась **2:9** на версии 1.10.0.
 Все 11 игр сохранены в [отчёте 1.10.0](expert-1.10.md), включая проигрыши;
 [предыдущая серия 1.9.2](expert-1.9.2.md) дала 2:3.
-Новая серия 1.11.0 готовится после проверки публичного сервера.
+Код и бюджет не менялись на протяжении всех 11 игр. Ошибки ответа: наши 0, Expert 0; наш максимум — 200 мс. Это одна контрольная серия, не доказательство устойчивого превосходства.
 
 ## Что изменено
 
@@ -59,3 +59,38 @@ Challenge-серия не заменяет позицию в рейтинге к
 500 мс ([сохранён](production-real-positions-1.11-first.json)); точная причина неизвестна.
 Повторный полный прогон: 2 ошибок из 120, максимум 504.28 мс
 ([данные](production-real-positions-1.11.json)).
+
+## Все 11 дуэлей версии 1.11.0
+
+| № | Исход | Ход | Длины мы / Expert | Причина | Макс. мс | Ошибки мы / Expert |
+| --- | --- | ---: | ---: | --- | ---: | ---: |
+| [1](https://arena.battlesnake.com/games/96557122-dfbb-4985-a245-fec81094f2fc) | Победа | 373 | 32 / 29 | Expert: self-collision | 188 | 0 / 0 |
+| [2](https://arena.battlesnake.com/games/cdec55a5-5902-4640-b115-cfab20ef24b9) | Победа | 334 | 31 / 30 | Expert: self-collision | 70 | 0 / 0 |
+| [3](https://arena.battlesnake.com/games/e8968d89-c770-4f11-8bc2-d043cd04ad34) | Поражение | 334 | 29 / 35 | self-collision | 63 | 0 / 0 |
+| [4](https://arena.battlesnake.com/games/41232b08-b7a2-460d-934a-06f3f7b47f85) | Победа | 353 | 33 / 30 | Expert: self-collision | 74 | 0 / 0 |
+| [5](https://arena.battlesnake.com/games/fdd72916-c477-435a-9c5d-212b5cfb0638) | Поражение | 369 | 23 / 34 | head-collision | 76 | 0 / 0 |
+| [6](https://arena.battlesnake.com/games/49bfd009-f810-45cb-8b56-c36706509e76) | Победа | 327 | 28 / 27 | Expert: self-collision | 168 | 0 / 0 |
+| [7](https://arena.battlesnake.com/games/35e1b072-fcfe-4c5a-a06a-7c0474240ca0) | Поражение | 207 | 17 / 27 | head-collision | 32 | 0 / 0 |
+| [8](https://arena.battlesnake.com/games/cc9a9211-4a5f-4c07-9190-cfaea8bb335c) | Поражение | 292 | 24 / 28 | head-collision | 60 | 0 / 0 |
+| [9](https://arena.battlesnake.com/games/262b118c-bc31-4826-9ea7-de509e65e6ea) | Ничья | 319 | 30 / 30 | head-collision | 200 | 0 / 0 |
+| [10](https://arena.battlesnake.com/games/38ee019d-a8b3-4ffd-abfb-8448efff38cf) | Поражение | 339 | 25 / 38 | wall-collision | 97 | 0 / 0 |
+| [11](https://arena.battlesnake.com/games/2f40ccb9-64d3-4013-bf1e-0e5288908862) | Поражение | 290 | 21 / 33 | head-collision | 126 | 0 / 0 |
+
+[Все результаты](expert-1.11.json), [проверка всех 3537 успешных ответов против кода](replay-1.11.json). Ни одна игра не исключена.
+Код начала серии: `51dd1c690cb1a126ed7119121e58333be046c432`.
+Финальное форматирование C не изменило бинарный модуль: его SHA-256 остался
+`579d35b5eca0a4b1e942fc26a113c0b827576a799d511e42a61212f70ade5b91`.
+
+Воспроизведение ходов опубликованной версии:
+
+```sh
+npm test
+node tools/replay-check.mjs --games docs/expert-1.11.json --engine wasm --nodes 40000 --work-budget 1000000
+# Локальная независимая серия 44:20:
+git clone https://github.com/malenferio-ux/hill-serpent /tmp/hill-serpent-1.10
+git -C /tmp/hill-serpent-1.10 checkout e27f8ff26a7ca7029d7aa8576bf3518be140b3f9
+node tools/release-check.mjs --baseline-dir /tmp/hill-serpent-1.10 --engine wasm --nodes 40000 --work-budget 1000000 --baseline-nodes 384 --games 64 --seed 84100000
+```
+
+[Метрики хостинга](hosting-1.11.json) не объясняют однозначно клиентские таймауты:
+в проверенном окне Cloudflare не сообщил ошибок CPU или выполнения.
