@@ -1,6 +1,6 @@
 import { readFile, writeFile, mkdir } from 'node:fs/promises';
 // No npm dependencies needed for a Dashboard quick-edit deployment.
-const names = ['game', 'duel-engine', 'agent', 'worker'];
+const names = ['game', 'space', 'duel-engine', 'agent', 'worker'];
 const parts = [];
 for (const name of names) {
   let source = await readFile(new URL(`../src/${name}.mjs`, import.meta.url), 'utf8');
