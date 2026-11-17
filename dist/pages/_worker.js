@@ -169,12 +169,12 @@ function toRequest(state, index = 0) {
 const DEFAULT_WEIGHTS = Object.freeze({
   territory: 1.8, length: 32, food: 6, health: 0.16,
   space: 1.2, trap: 450, mobility: 8, center: 0.35,
-  staticSafety: 0.5, territoryCap: 0, foodPotential: 0, tailRisk: 0, staticSpace: 0, staticTailSteps: 2, foodProgress: 0, foodRace: 0, leadTarget: 999, leadSlope: 1,
+  staticSafety: 0.5, territoryCap: 0, foodPotential: 0, tailRisk: 0, staticSpace: 0, staticTailSteps: 2, foodProgress: 0, foodRace: 0, leadTarget: 999, leadSlope: 1, connectedSafety: 0,
 });
-// Keep the four-player policy while improving food progress in duels.
+// Keep the four-player policy while improving escape space in duels.
 const DUEL_WEIGHTS = Object.freeze({
   ...DEFAULT_WEIGHTS, length: 48, territoryCap: 0.4, foodPotential: 1, tailRisk: 1,
-  staticSpace: 0, staticTailSteps: 2, foodProgress: 8, foodRace: 1, leadTarget: 6, leadSlope: 0.2,
+  staticSpace: 0, staticTailSteps: 2, foodProgress: 8, foodRace: 1, leadTarget: 6, leadSlope: 0.2, connectedSafety: 0.5,
 });
 const WIN = 1_000_000, LOSS = -1_000_000, DRAW = -10_000;
 const STOP = Symbol('search budget exhausted');
@@ -195,6 +195,7 @@ class Evaluator {
     this.staticSpaces = new Float64Array(count);
     this.tailConnected = new Uint8Array(count);
     this.seen = new Int16Array(g.size);
+    this.connectedSpace = g.size;
   }
 
   evaluate(state, ply = 0) {
@@ -215,7 +216,10 @@ class Evaluator {
     for (let i = 1; i < snakes.length; i++) {
       if (snakes[i].alive) enemy = Math.max(enemy, this.value(state, i));
     }
-    return own - (enemy === -Infinity ? 0 : enemy) + lengthAdjustment;
+    const deficit = this.duel && !state.constrictor && this.weights.connectedSafety > 0
+      ? Math.max(0, me.body.length + 2 - this.connectedSpace) / (me.body.length + 2) : 0;
+    return own - (enemy === -Infinity ? 0 : enemy) + lengthAdjustment
+      - this.weights.connectedSafety * this.weights.trap * deficit;
   }
 
   analyze(state) {
@@ -300,6 +304,26 @@ class Evaluator {
       for (let i = 0; i < snakes.length; i++) {
         if (this.raceFoodDistances[i] < 999) foodDistances[i] = this.raceFoodDistances[i];
       }
+    }
+    this.connectedSpace = g.size;
+    if (this.duel && !state.constrictor && this.weights.connectedSafety > 0) {
+      // Cells reached only through an earlier enemy claim are not usable
+      // exits. Count the connected time-controlled region from our head.
+      const seen = this.seen, enemy = distances[1], me = snakes[0];
+      seen.fill(999); seen[me.body[0]] = 0; queue[0] = me.body[0];
+      let read = 0, end = 1, room = 1;
+      while (read < end && room < me.body.length + 2) {
+        const p = queue[read++], d = seen[p] + 1;
+        for (let move = 0; move < 4; move++) {
+          const q = g.next[p * 4 + move];
+          if (q < 0 || seen[q] !== 999 || release[q] > d) continue;
+          if (enemy[q] < d || (enemy[q] === d && snakes[1].body.length >= me.body.length)) continue;
+          if (!state.food[q] && me.health <= d + state.hazards[q] * state.hazardDamage) continue;
+          seen[q] = d; queue[end++] = q; room += state.hazards[q] ? .25 : 1;
+          if (room >= me.body.length + 2) break;
+        }
+      }
+      this.connectedSpace = room;
     }
   }
 
@@ -630,7 +654,7 @@ function decide(state, options = {}) {
 
 // worker.mjs
 
-const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.7.1' };
+const DETAILS = { apiversion: '1', author: 'malenferio-ux', color: '#8b5cf6', head: 'default', tail: 'default', version: '1.8.0' };
 
 async function handle(request, env = {}) {
   const path = new URL(request.url).pathname.replace(/\/$/, '') || '/';
